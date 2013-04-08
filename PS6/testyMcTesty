@@ -1,0 +1,1 @@
+﻿<?xml version="1.0" encoding="utf-8"?><spreadsheet version="default"><cell><name>A4</name><contents>4</contents></cell><cell><name>b4</name><contents>string</contents></cell><cell><name>c4</name><contents>=A4+2</contents></cell></spreadsheet>
