@@ -68,7 +68,7 @@ namespace SS
             //instantiate Spreadsheet fields
             spreadsheet = new Dictionary<string, Cell>();
             dg = new DependencyGraph();
-            //Added this comment for git commit
+            //Added this comment for git commit, dammit
             changed = false;
         }
 
