@@ -1,0 +1,12 @@
+\\vmware-host\Shared Folders\Documents\SharedRepos\SpreadsheetWeb\PS6\Debugger\bin\Debug\Debugger.exe
+\\vmware-host\Shared Folders\Documents\SharedRepos\SpreadsheetWeb\PS6\Debugger\bin\Debug\Debugger.pdb
+\\vmware-host\Shared Folders\Documents\SharedRepos\SpreadsheetWeb\PS6\Debugger\bin\Debug\Formula.dll
+\\vmware-host\Shared Folders\Documents\SharedRepos\SpreadsheetWeb\PS6\Debugger\bin\Debug\Spreadsheet.dll
+\\vmware-host\Shared Folders\Documents\SharedRepos\SpreadsheetWeb\PS6\Debugger\bin\Debug\SpreadsheetUtilities.dll
+\\vmware-host\Shared Folders\Documents\SharedRepos\SpreadsheetWeb\PS6\Debugger\bin\Debug\Spreadsheet.pdb
+\\vmware-host\Shared Folders\Documents\SharedRepos\SpreadsheetWeb\PS6\Debugger\bin\Debug\Spreadsheet.xml
+\\vmware-host\Shared Folders\Documents\SharedRepos\SpreadsheetWeb\PS6\Debugger\bin\Debug\Formula.xml
+\\vmware-host\Shared Folders\Documents\SharedRepos\SpreadsheetWeb\PS6\Debugger\bin\Debug\SpreadsheetUtilities.xml
+\\vmware-host\Shared Folders\Documents\SharedRepos\SpreadsheetWeb\PS6\Debugger\obj\x86\Debug\Debugger.csprojResolveAssemblyReference.cache
+\\vmware-host\Shared Folders\Documents\SharedRepos\SpreadsheetWeb\PS6\Debugger\obj\x86\Debug\Debugger.exe
+\\vmware-host\Shared Folders\Documents\SharedRepos\SpreadsheetWeb\PS6\Debugger\obj\x86\Debug\Debugger.pdb

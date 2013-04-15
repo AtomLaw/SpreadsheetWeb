@@ -1,0 +1,9 @@
+C:\Users\Spaldex\Documents\Visual Studio 2010\Projects\PS10\StringSocket\bin\Debug\StringSocket.dll
+C:\Users\Spaldex\Documents\Visual Studio 2010\Projects\PS10\StringSocket\bin\Debug\StringSocket.pdb
+C:\Users\Spaldex\Documents\Visual Studio 2010\Projects\PS10\StringSocket\obj\Debug\ResolveAssemblyReference.cache
+C:\Users\Spaldex\Documents\Visual Studio 2010\Projects\PS10\StringSocket\obj\Debug\StringSocket.dll
+C:\Users\Spaldex\Documents\Visual Studio 2010\Projects\PS10\StringSocket\obj\Debug\StringSocket.pdb
+\\vmware-host\Shared Folders\Documents\SharedRepos\SpreadsheetWeb\PS6\StringSocket\bin\Debug\StringSocket.dll
+\\vmware-host\Shared Folders\Documents\SharedRepos\SpreadsheetWeb\PS6\StringSocket\bin\Debug\StringSocket.pdb
+\\vmware-host\Shared Folders\Documents\SharedRepos\SpreadsheetWeb\PS6\StringSocket\obj\Debug\StringSocket.dll
+\\vmware-host\Shared Folders\Documents\SharedRepos\SpreadsheetWeb\PS6\StringSocket\obj\Debug\StringSocket.pdb
