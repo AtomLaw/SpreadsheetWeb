@@ -1,5 +1,7 @@
 
-
+/*
+*Server outline for spreadsheet web program.
+*/
 #include <cstdlib>
 #include <iostream>
 #include <boost/bind.hpp>
@@ -72,7 +74,7 @@ public:
     : io_service_(io_service),
       acceptor_(io_service, tcp::endpoint(tcp::v4(), port))
   {
-    start_accept();
+    start_accept(); //First callback method, creates a new session/connection
   }
 
 private:
