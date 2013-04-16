@@ -24,10 +24,17 @@ public:
 
   void start()
   {
+
+    std::cout << "Socket connected." << std::endl;
+
     socket_.async_read_some(boost::asio::buffer(data_, max_length),
         boost::bind(&session::handle_read, this,
           boost::asio::placeholders::error,
           boost::asio::placeholders::bytes_transferred));
+    // boost::asio::async_read_until(socket_, buffer, '\r\n',
+    //                               boost::bind(&session::handle_read, this, 
+    //                               boost::asio::placeholders::error,
+    //                               boost::asio::placeholders::bytes_transferred));
   }
 
 private:
@@ -65,6 +72,8 @@ private:
   tcp::socket socket_;
   enum { max_length = 1024 };
   char data_[max_length];
+  // boost::asio::streambuf buffer;
+
 };
 
 class server
