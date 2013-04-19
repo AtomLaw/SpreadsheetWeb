@@ -6,13 +6,15 @@
 #include <iostream>
 #include <boost/bind.hpp>
 #include <boost/asio.hpp>
+#include "session.cc"
+#include <map>
 
 using boost::asio::ip::tcp;
 
-class session //connection
+class connection //connection
 {
 public:
-  session(boost::asio::io_service& io_service)
+  connection(boost::asio::io_service& io_service)
     : socket_(io_service)
   {
   }
@@ -27,26 +29,43 @@ public:
 
     std::cout << "Socket connected." << std::endl;
 
-    socket_.async_read_some(boost::asio::buffer(data_, max_length),
-        boost::bind(&session::handle_read, this,
-          boost::asio::placeholders::error,
-          boost::asio::placeholders::bytes_transferred));
-    // boost::asio::async_read_until(socket_, buffer, '\r\n',
-    //                               boost::bind(&session::handle_read, this, 
-    //                               boost::asio::placeholders::error,
-    //                               boost::asio::placeholders::bytes_transferred));
+    // socket_.async_read_some(boost::asio::buffer(data_, max_length),
+    //     boost::bind(&connection::handle_read, this,
+    //       boost::asio::placeholders::error,
+    //       boost::asio::placeholders::bytes_transferred));
+    boost::asio::async_read_until(socket_, buffer, '\n', 
+                                  boost::bind(&connection::handle_read, this,
+                                  boost::asio::placeholders::error,
+                                  boost::asio::placeholders::bytes_transferred));
   }
 
 private:
-  void handle_read(const boost::system::error_code& error,
-      size_t bytes_transferred)
+  // void handle_read(const boost::system::error_code& error,
+  //     size_t bytes_transferred)
+  void handle_read(const boost::system::error_code & error, std::size_t size)
   {
     if (!error)
     {
+      std::cout << "Number of bytes transferred:  " << size << std::endl;
+
+      // boost::asio::async_write(socket_,
+      //     boost::asio::buffer(data_, bytes_transferred),
+      //     boost::bind(&connection::handle_write, this,
+      //       boost::asio::placeholders::error));
+      
+      //Parse the string
+      std::istream is(&buffer);
+      std::string line;
+      std::getline(is, line);
+
+      std::cout << "Received string : " << line << std::endl;
+
       boost::asio::async_write(socket_,
-          boost::asio::buffer(data_, bytes_transferred),
-          boost::bind(&session::handle_write, this,
-            boost::asio::placeholders::error));
+              boost::asio::buffer(line, size),
+              boost::bind(&connection::handle_write, this,
+              boost::asio::placeholders::error));
+
+
     }
     else
     {
@@ -58,10 +77,20 @@ private:
   {
     if (!error)
     {
-      socket_.async_read_some(boost::asio::buffer(data_, max_length),
-          boost::bind(&session::handle_read, this,
-            boost::asio::placeholders::error,
-            boost::asio::placeholders::bytes_transferred));
+      // socket_.async_read_some(boost::asio::buffer(data_, max_length),
+      //     boost::bind(&connection::handle_read, this,
+      //       boost::asio::placeholders::error,
+      //       boost::asio::placeholders::bytes_transferred));
+
+
+
+      
+
+      boost::asio::async_read_until(socket_, buffer, '\n',
+                                  boost::bind(&connection::handle_read, this, 
+                                  boost::asio::placeholders::error,
+                                  boost::asio::placeholders::bytes_transferred));
+
     }
     else
     {
@@ -70,10 +99,10 @@ private:
   }
 
   tcp::socket socket_;
-  enum { max_length = 1024 };
-  char data_[max_length];
-  // boost::asio::streambuf buffer;
-
+  // enum { max_length = 1024 };
+  // char data_[max_length];
+  boost::asio::streambuf buffer; //Holds incoming bytes
+  // boost::system::error_code error;
 };
 
 class server
@@ -85,28 +114,28 @@ public:
     : io_service_(io_service),
       acceptor_(io_service, tcp::endpoint(tcp::v4(), port))
   {
-    start_accept(); //First callback method, creates a new session/connection
+    start_accept(); //First callback method, creates a new connection
   }
 
 private:
   void start_accept()
   {
-    session* new_session = new session(io_service_);
-    acceptor_.async_accept(new_session->socket(),
-        boost::bind(&server::handle_accept, this, new_session,
+    connection* new_connection = new connection(io_service_);
+    acceptor_.async_accept(new_connection->socket(),
+        boost::bind(&server::handle_accept, this, new_connection,
           boost::asio::placeholders::error));
   }
 
-  void handle_accept(session* new_session,
+  void handle_accept(connection* new_connection,
       const boost::system::error_code& error)
   {
     if (!error)
     {
-      new_session->start();
+      new_connection->start();
     }
     else
     {
-      delete new_session;
+      delete new_connection;
     }
 
     start_accept();
@@ -114,6 +143,10 @@ private:
 
   boost::asio::io_service& io_service_;
   tcp::acceptor acceptor_;
+
+  //Holds a list of sessions mapped to a filenames
+  std::map<std::string, session> sessions;
+
 };
 
 int main()
