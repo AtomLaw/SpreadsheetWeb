@@ -9,7 +9,7 @@
 
 using boost::asio::ip::tcp;
 
-class session
+class session //connection
 {
 public:
   session(boost::asio::io_service& io_service)
@@ -78,6 +78,8 @@ private:
 
 class server
 {
+
+//Map of filenames to 
 public:
   server(boost::asio::io_service& io_service, short port)
     : io_service_(io_service),
