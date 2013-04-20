@@ -1,29 +1,34 @@
-#include <iostream>
-#include "spreadsheet.h"
-// #include "main.cc"
+#include "session.h"
 
-// class connection;
-
-class session 
+session::session(std::string filename)
 {
+  this->ss = new spreadsheet(filename);
+  this->ss->load();
+}
 
-public:
+session::~session()
+{
+  this->ss->save();
+  delete this->ss;
+}
 
-	session(std::string filename) : my_spreadsheet(filename)
-	{
-		filename_ = filename;
-	}
-
-	// void join(connection::connection & a_connection)
-	// {
-
-	// }
+//Joins a connection to the session
+void session::join(connection *connection)
+{
+  connection->read_message(boost::bind(&session::handle_message, this, _1, _2));
+  connections.push_back(connection);
+}
 
 
-
-private:
-
-	std::string filename_;
-	spreadsheet::spreadsheet my_spreadsheet;
-
-};
+void session::handle_message(Message msg, connection *conn)
+{
+  switch(msg.type)
+    {
+    case MESSAGE_CREATE:
+      break;
+    default:
+      break;
+    }
+  
+  conn->read_message(boost::bind(&session::handle_message, this, _1, _2));
+}
