@@ -1,55 +1,58 @@
+#include "server.h"
+
 //Server class
-#include <cstdlib>
-#include <iostream>
-#include <boost/bind.hpp>
-#include <boost/asio.hpp>
-#include <map>
 
 
-using boost::asio::ip::tcp;
-
-class connection;
-
-class server
+server::server(boost::asio::io_service& io_service, short port)
+  : io_service_(io_service),
+    acceptor(io_service, tcp::endpoint(tcp::v4(), port))
 {
+  start_accept(); //First callback method, creates a new connection
+}
 
-//Map of filenames to 
-public:
-  server(boost::asio::io_service& io_service, short port)
-    : io_service_(io_service),
-      acceptor_(io_service, tcp::endpoint(tcp::v4(), port))
-  {
-    start_accept(); //First callback method, creates a new connection
-  }
+//Creates a session and adds the connection to that session
+bool server::create_session(connection & connection_, std::string filename)
+{
+  // session session_(filename); //Create the session
+  // session_.join
+  return true;
+}
 
-private:
-  void start_accept()
-  {
-    connection* new_connection = new connection(io_service_, *this);
-    acceptor_.async_accept(new_connection->socket(),
-        boost::bind(&server::handle_accept, this, new_connection,
-          boost::asio::placeholders::error));
-  }
+void server::start_accept()
+{
+  tcp::socket *socket = new tcp::socket(io_service_);
+  //  connection* new_connection = new connection(io_service_, *this);
+  acceptor.async_accept(*socket,
+			 boost::bind(&server::handle_accept, this, socket,
+				     boost::asio::placeholders::error));
+}
 
-  void handle_accept(connection* new_connection,
-      const boost::system::error_code& error)
-  {
-    if (!error)
+void server::handle_accept(tcp::socket *socket,
+			   const boost::system::error_code& error)
+{
+  if (!error)
     {
-      new_connection->start();
+      connection *nc = new connection(socket);
+      nc->read_message(boost::bind(&server::handle_message, this,
+				   _1, _2));
     }
-    else
+  else
     {
-      delete new_connection;
+      delete socket;
     }
+  
+  start_accept();
+}
 
-    start_accept();
+void server::handle_message(Message msg, connection* conn)
+{
+  switch(msg.type){
+  case MESSAGE_CREATE:
+    std::cout << "Received Create Message" << std::endl;
+    break;
+  default:
+    std::cout << "ERROR" << std::endl;
   }
-
-  boost::asio::io_service& io_service_;
-  tcp::acceptor acceptor_;
-
-  //Holds a list of sessions mapped to a filenames
-  std::map<std::string, session> sessions;
-
-};
+  conn->read_message(boost::bind(&server::handle_message, this,
+				 _1, _2));
+}

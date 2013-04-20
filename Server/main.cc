@@ -13,36 +13,47 @@
 
 using boost::asio::ip::tcp;
 
-class server;
-class session;
 
 
 #include "connection.h"
-
+#include "server.h"
 //**************************************
 //CONNECTION CLASS
 //**************************************
 
 
-#include "server.h"
+//#include "server.h"
 
-#include "session.h"
+//#include "session.h"
 
 int main()
 {
-  try
-  {
+   try
+   {
 
-    boost::asio::io_service io_service;
+     boost::asio::io_service io_service;
 
-    using namespace std; 
-    server::server s(io_service, 1984); //Open a server on port 1984
+     server s(io_service, 1984);
+     io_service.run();
 
-    io_service.run();
-  }
-  catch (std::exception& e)
-  {
-    std::cerr << "Exception: " << e.what() << "\n";
+     // using namespace std; 
+     // tcp::acceptor acceptor(io_service, tcp::endpoint(tcp::v4(), 1984));
+     // for(;;)
+     //   {
+     // 	 tcp::socket socket(io_service);
+     // 	 cout << "Waiting for client connection..." << endl;
+     // 	 acceptor.accept(socket);
+     // 	 connection conn(&socket);
+     // 	 conn.send_message("Hello World");
+	 
+     //   }
+     //   server::server s(io_service, 1984); //Open a server on port 1984
+
+     //     io_service.run();
+   }
+   catch (std::exception& e)
+   {
+     std::cerr << "Exception: " << e.what() << "\n";
   }
 
   return 0;
