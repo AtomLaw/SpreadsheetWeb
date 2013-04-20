@@ -22,14 +22,16 @@ namespace SpreadsheetClient
         //class wide variables to track whether a file has been saved
         //Mostly to avoid repeated Save Dialogs and for 
         //Save as functionality.
-        private bool UpToDate;
+        //private bool UpToDate;
         private string name;
         private string password;
+        private string version;
+        private Queue<KeyValuePair<string, string>> changeRequests;
 
         /// <summary>
         /// The spreadsheet window
         /// </summary>
-        public SpreadsheetGUI(string name, string password)
+        public SpreadsheetGUI(string name, string password, string version)
         {
             InitializeComponent();
 
@@ -42,10 +44,12 @@ namespace SpreadsheetClient
             //if the Enter key is struck, assume user means Set Cell Contents
             AcceptButton = btn_SetContents;
             RefreshTextFields(ssp); //refresh the text fields at the top
-            UpToDate = true; //this file has not been saved before
 
+            //this.UpToDate = true; //this file has not been saved before
+            this.changeRequests = new Queue<KeyValuePair<string, string>>();
             this.name = name;
             this.password = password;
+            this.version = version;
         }
 
 
@@ -132,15 +136,15 @@ namespace SpreadsheetClient
                 contents = txtBox_Contents.Text.Trim().ToUpper(); //set the text to upper case
             else
                 contents = txtBox_Contents.Text.Trim(); //otherwise, set it to the text as is
-            string name = txtBox_Cell.Text.Trim();
+            string cell = txtBox_Cell.Text.Trim();
 
             //address is the numeric coordinates of the selected cell
-            int[] address = GetCoordinates(name);
+            int[] address = GetCoordinates(cell);
 
             //set the contents of the spreadsheet to what the user enters
             try
             {
-                IEnumerable<string> dependees = ss.SetContentsOfCell(name, contents);
+                IEnumerable<string> dependees = ss.SetContentsOfCell(cell, contents);
                 foreach (string s in dependees)
                 {
                     address = GetCoordinates(s);
@@ -150,14 +154,20 @@ namespace SpreadsheetClient
                     if (v.GetType() == typeof(SpreadsheetUtilities.FormulaError))
                         ssp.SetValue(address[0], address[1] - 1, "Formula Error");
                     else
-                        ssp.SetValue(address[0], address[1] - 1, v.ToString());
+                    {
+                        string message = "CHANGE\nName:" + this.name + "\nVersion:" + this.version + "\nCell:" + cell + "\nLength:" + contents.Length + "\n" + contents;
+                        model.SendMessage(message);
+                        changeRequests.Enqueue(new KeyValuePair<string, string>(cell, contents));
+                        //ssp.SetValue(address[0], address[1] - 1, v.ToString());
+                    }
+
                 }
                 //Set the text fields
                 FillSpreadSheet(ssp, ss);
             }
             catch (Exception x)
             {
-                if(x is CircularException)
+                if (x is CircularException)
                     MessageBox.Show("The entered formula would cause a circular dependency.");
                 else if (x is SpreadsheetUtilities.FormulaFormatException)
                     MessageBox.Show("An invalid formula was entered.");
@@ -167,7 +177,66 @@ namespace SpreadsheetClient
                     throw x;
             }
 
+           
         }
+
+        /// <summary>
+        /// Set cell contents when okayed by server
+        /// </summary>
+        /// <param name="cell"></param>
+        /// <param name="contents"></param>
+        public void SetContentsOkay(string version)
+        {
+            this.version = version;
+            KeyValuePair<string, string> pair = changeRequests.Dequeue();
+            string cell = pair.Key;
+            string contents = pair.Value;
+            int[] address = GetCoordinates(cell);
+
+            IEnumerable<string> dependees = ss.SetContentsOfCell(cell, contents);
+            foreach (string s in dependees)
+            {
+                address = GetCoordinates(s);
+                object v = ss.GetCellValue(s);
+                RefreshTextFields(ssp);
+                //if it returns a formula error, display that in a more friendly way.
+                if (v.GetType() == typeof(SpreadsheetUtilities.FormulaError))
+                    ssp.SetValue(address[0], address[1] - 1, "Formula Error");
+                else
+                {
+                    //string message = "CHANGE\nName:" + this.name + "\nVersion:" + this.version + "\nCell:" + cell + "\nLength:" + contents.Length + "\n" + contents;
+                    //model.SendMessage(message);
+                    ssp.SetValue(address[0], address[1] - 1, v.ToString());
+                }
+
+            }
+            //Set the text fields
+            FillSpreadSheet(ssp, ss);
+           
+        }
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="contents"></param>
+        public void updateContents(string cell, string contents, string version)
+        {
+            this.version = version;
+            int[] address = GetCoordinates(cell);
+
+            IEnumerable<string> dependees = ss.SetContentsOfCell(cell, contents);
+            foreach (string s in dependees)
+            {
+                address = GetCoordinates(s);
+                object v = ss.GetCellValue(s);
+                RefreshTextFields(ssp);
+                ssp.SetValue(address[0], address[1] - 1, v.ToString());
+            }
+            //Set the text fields
+            FillSpreadSheet(ssp, ss);
+        }
+
 
 
         /// <summary>
@@ -224,12 +293,7 @@ namespace SpreadsheetClient
         /// <param name="e"></param>
         private void menu_File_Save_Click(object sender, EventArgs e)
         {
-            if (!UpToDate)
-            {
-                //If the client's copy isn't up to date, they can't commit a save
-            }
-            else
-                ss.Save(name); //if the client is presumed up to date, attempt a save.
+            model.SendMessage("SAVE\nName:"+ this.name); //if the client is presumed up to date, attempt a save.
         }
 
 
@@ -244,52 +308,25 @@ namespace SpreadsheetClient
         }
 
 
-        ///// <summary>
-        ///// Opens a saved file and Displays the spreadsheet.
-        ///// </summary>
-        ///// <param name="sender"></param>
-        ///// <param name="e"></param>
-        //private void menu_File_JoinNew_Click(object sender, EventArgs e)
-        //{
-        //    Stream stream; //used for initializing the new window.
-        //    OpenFileDialog fileBrowser = new OpenFileDialog(); //new file browser window
-        //    fileBrowser.Filter = "SimpleSheet files (*.ss)|*.ss|All Files (*.*)|*.*"; //filter to .ss or All files.
-        //    if (fileBrowser.ShowDialog() == DialogResult.OK)
-        //    {
-        //        try
-        //        {
-        //            if ((stream = fileBrowser.OpenFile()) != null)
-        //            {
-        //                using (stream)
-        //                {
-        //                    SpreadsheetGUI newForm = new SpreadsheetGUI(); //create a new window
-        //                    //fill a spreadsheet using the saved file.
-        //                    newForm.ss = new Spreadsheet(fileBrowser.FileName, IsValid, Normalize, "ps6");
-        //                    //run the new window
-        //                    SpreadsheetApplicationContext.getAppContext().RunForm(newForm);
-        //                    //fill the spreadsheet panel
-        //                    FillSpreadSheet(newForm.ssp, newForm.ss);
-        //                    //note this is a saved file
-        //                    newForm.UpToDate = true;
-        //                    //store the filename
-        //                    newForm.name = fileBrowser.FileName;
-        //                }
-        //            }
-        //        }
-        //        catch (Exception x)
-        //        {
-        //            if (x is IOException)
-        //                MessageBox.Show("There was a problem reading the file", "File Read Error");
-        //            else if (x is SpreadsheetReadWriteException)
-        //                MessageBox.Show(x.Message);
-        //        }
-
-        //    }
-        //}
+        /// <summary>
+        /// Opens a saved file and Displays the spreadsheet.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        public void JoinNew(string xml, string name, string version)
+        {
+            //fill a spreadsheet using the saved file.
+            this.ss = new Spreadsheet(name, IsValid, Normalize, version);
+            //run the new window
+            SpreadsheetApplicationContext.getAppContext().RunForm(this);
+            //fill the spreadsheet panel
+            FillSpreadSheet(this.ssp, this.ss);
+        }
 
         private void undoToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            //Send UNDO Protocol
+            string message = "UNDO\nName:" + this.name + "\nVersion:" + this.version;
+            model.SendMessage(message);
         }
         
 

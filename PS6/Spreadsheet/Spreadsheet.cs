@@ -59,6 +59,8 @@ namespace SS
         // the DependencyGraph that handles the dependent relationships of the cells of the spreadsheet
         private DependencyGraph dg;
 
+        private Queue<string> changesQueue;
+
         private bool changed;
 
         /// <inheritdoc />
@@ -224,7 +226,6 @@ namespace SS
                         w.WriteStartElement("name");
                         w.WriteString(c.Name);
                         w.WriteEndElement();
-                        //w.WriteEndElement();
                         w.WriteStartElement("contents");
                         {
                             if (c.Contents.GetType() == typeof(string))
@@ -322,8 +323,6 @@ namespace SS
             // cell becomes that double.
             if (double.TryParse(content, out d))
             {
-                //spreadsheet.Remove(name);
-                //spreadsheet.Add(name, new Cell(name, content));
                 return SetCellContents(name, d);
             }
 
@@ -349,11 +348,6 @@ namespace SS
         {
             name = Normalize(name);
 
-            //This can't happen anymore. It's checked in SetContentsOfCell.
-            // If name is null or invalid, throw an InvalidNameException.
-            //if (name == null || !IsValidCellName(name))
-            //    throw new InvalidNameException();
-
             //create a new cell with the name and number.
             Cell c = new Cell(name, number);
 
@@ -378,16 +372,6 @@ namespace SS
                     SetCellContents(s, f);
                 }
             }
-            //if (recalc.Count() > 1)
-            //{
-            //    for (int i = 1; i < recalc.Count(); i++)
-            //    {
-            //        object contents = GetCellContents(recalc.ElementAt(i));
-            //        if (contents.GetType() == typeof(Formula))
-            //            contents = "=" + contents.ToString();
-            //        SetContentsOfCell(recalc.ElementAt(i), contents.ToString());
-            //    }
-            //}
 
             changed = true;
 
@@ -397,17 +381,7 @@ namespace SS
         /// <inheritdoc />
         protected override ISet<string> SetCellContents(string name, string text)
         {
-            //This can't happen anymore. It's checked in SetContentsOfCell.
-            // If text is null, throw an ArgumentNullException.
-            //if (text == null)
-            //    throw new ArgumentNullException();
-
             name = Normalize(name);
-
-            //This can't happen anymore. It's checked in SetContentsOfCell.
-            // Otherwise, if name is null or invalid, throw an InvalidNameException.
-            //if (name == null || !IsValidCellName(name))
-            //    throw new InvalidNameException();
 
             //create the cell with name and text
             Cell c = new Cell(name, text);
@@ -435,16 +409,6 @@ namespace SS
                     SetCellContents(s, f);
                 }
             }
-            //if (recalc.Count() > 1)
-            //{
-            //    for (int i = 1; i < recalc.Count(); i++)
-            //    {
-            //        object contents = GetCellContents(recalc.ElementAt(i));
-            //        if (contents.GetType() == typeof(Formula))
-            //            contents = "=" + contents.ToString();
-            //        SetContentsOfCell(recalc.ElementAt(i), contents.ToString());
-            //    }
-            //}
 
             changed = true;
 
@@ -454,17 +418,7 @@ namespace SS
         /// <inheritdoc />
         protected override ISet<string> SetCellContents(string name, Formula formula)
         {
-            //This can't happen anymore. It's checked in SetContentsOfCell.
-            // If formula parameter is null, throw an ArgumentNullException.
-            //if (formula == null)
-            //    throw new ArgumentNullException();
-
             name = Normalize(name);
-
-            //This can't happen anymore. It's checked in SetContentsOfCell.
-            // Otherwise, if name is null or invalid, throw an InvalidNameException.
-            //if (name == null || !IsValidCellName(name))
-            //    throw new InvalidNameException();
 
             //copy the original cell and its dependents if it exists
             Cell original;
@@ -497,14 +451,9 @@ namespace SS
                 //add the new dependencies
                 foreach (string v in formula.GetVariables())
                     dg.AddDependency(name, v);
-
                
-                //object contents = GetCellContents(s);
-                    //if (contents.GetType() == typeof(Formula))
-                    //    contents = "=" + contents.ToString();
-                    //SetContentsOfCell(recalc.ElementAt(i), contents.ToString());
-
             }
+
             //if we get a circular exception, undo all the changes
             catch (CircularException ce)
             {
@@ -534,7 +483,6 @@ namespace SS
                 set.Add(s); //add each dependent to the set
 
             //recalculate cells, check for Circular Dependencies
-            //GetCellsToRecalculate(name);
             IEnumerable<string> recalc = GetCellsToRecalculate(name);
             foreach (string s in recalc)
             {

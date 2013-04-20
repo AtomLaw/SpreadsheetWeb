@@ -28,10 +28,12 @@ namespace SpreadsheetClient
                 MessageBox.Show("The server address you entered is invalid. Please try again");
             else
             {
-                SpreadsheetClient.OpenSpreadSheetEntry(server);
+                model.ConnectToServer(server);
+
+                //SpreadsheetClient.OpenSpreadSheetEntry(server);
+                //Close();
+
                 //SpreadsheetApplicationContext.getAppContext().RunForm(new SpreadsheetEntry(server));
-                Close();
-                //model.ConnectToServer(server);
             }
 
             if (model.IsConnected)
