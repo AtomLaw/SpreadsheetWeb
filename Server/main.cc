@@ -3,6 +3,7 @@
 *Server outline for spreadsheet web program.
 */
 #include <cstdlib>
+#include <list>
 #include <iostream>
 #include <boost/bind.hpp>
 #include <boost/asio.hpp>
@@ -23,13 +24,14 @@ class session;
 
 
 
-class connection //connection
+class connection 
 {
 public:
   connection(boost::asio::io_service& io_service, server & server_)
     : socket_(io_service) 
   {
     my_server = &server_;
+    is_part_of_session = false;
   }
 
   tcp::socket& socket()
@@ -37,6 +39,7 @@ public:
     return socket_;
   }
 
+  //Starts the connection
   void start()
   {
 
@@ -50,6 +53,24 @@ public:
                                   boost::bind(&connection::handle_read, this,
                                   boost::asio::placeholders::error,
                                   boost::asio::placeholders::bytes_transferred));
+  }
+
+  //Adds this connection to a session
+  bool add_to_session(session & session_)
+  {
+    my_session = &session_;
+  }
+
+  //Broadcasts a message to the connected socket
+  void broadcast_message(std::string message)
+  {
+
+    std::string line = "You are hearing me talk.";
+
+    boost::asio::async_write(socket_,
+              boost::asio::buffer(line),
+              boost::bind(&connection::handle_write, this,
+              boost::asio::placeholders::error));
   }
 
 private:
@@ -66,7 +87,7 @@ private:
       //     boost::bind(&connection::handle_write, this,
       //       boost::asio::placeholders::error));
       
-      //Parse the string
+      //Parse the string up to the delimiter
       std::istream is(&buffer);
       std::string line;
       std::getline(is, line);
@@ -111,12 +132,16 @@ private:
     }
   }
 
+  //Member variables
+
   tcp::socket socket_;
   // enum { max_length = 1024 };
   // char data_[max_length];
   boost::asio::streambuf buffer; //Holds incoming bytes
   // boost::system::error_code error;
   server * my_server; //The server this connection is a part of
+  bool is_part_of_session; //Tells whether this connection is part of a session
+  session * my_session; //The session the connection is a part of
 };
 
 
@@ -136,6 +161,14 @@ public:
       acceptor_(io_service, tcp::endpoint(tcp::v4(), port))
   {
     start_accept(); //First callback method, creates a new connection
+  }
+
+  //Creates a session and adds the connection to that session
+  bool create_session(connection & connection_, std::string filename)
+  {
+    // session session_(filename); //Create the session
+    // session_.join
+    return true;
   }
 
 private:
@@ -186,15 +219,18 @@ public:
     filename_ = filename;
   }
 
-  // void join(connection::connection & a_connection)
-  // {
-
-  // }
+  //Joins a connection to the session
+  void join(connection::connection & a_connection)
+  {
+    connections.push_back(&a_connection);
+  }
 
 private:
 
   std::string filename_;
   spreadsheet::spreadsheet my_spreadsheet;
+  std::list<connection *> connections;
+
 
 };
 
