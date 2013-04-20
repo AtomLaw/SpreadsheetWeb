@@ -1,8 +1,8 @@
 #include "session.h"
 
-session::session(std::string filename)
+session::session(spreadsheet* ss)
 {
-  this->ss = new spreadsheet(filename);
+  this->ss = ss;
   this->ss->load();
 }
 
