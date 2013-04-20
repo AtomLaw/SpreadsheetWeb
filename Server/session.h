@@ -22,7 +22,7 @@ class session
 
 public:
 
-  session(std::string filename);
+  session(spreadsheet* ss);
   virtual ~session();
 
   //Joins a connection to the session

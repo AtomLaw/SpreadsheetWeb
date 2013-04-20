@@ -1,5 +1,6 @@
 #include "server.h"
 
+#include <sstream>
 //Server class
 
 
@@ -49,7 +50,25 @@ void server::handle_message(Message msg, connection* conn)
   switch(msg.type){
   case MESSAGE_CREATE:
     std::cout << "Received Create Message" << std::endl;
-    conn->send_message("Received message\n");
+    spreadsheet ss(msg.create.name);
+    if(ss.exists())
+      {
+	std::ostringstream out;
+	out << "CREATE FAIL\n"
+	     << "Name:" << msg.create.name << "\n"
+	    << "The spreadsheet already exists!\n";
+	conn->send_message(out.str());
+      }
+    else
+      {
+	ss.create(msg.create.password);
+
+	std::ostringstream out;
+	out << "CREATE OK\n"
+	    << "Name:" << msg.create.name << "\n"
+	    << "Password:" << msg.create.password << "\n";
+	conn->send_message(out.str());
+      }	
     break;
   case MESSAGE_JOIN:
     std::cout << "Received join request" << std::endl;
