@@ -100,11 +100,18 @@ void connection::handle_read(const boost::system::error_code & error, std::size_
       std::string line;
       std::getline(is, line);
 
+      if (!line.empty() && line[line.size() - 1] == '\r')
+        line.erase(line.size() - 1);
+
       std::cout << "Received string : " << line << std::endl;
+
+
 
       line_buffer.push_back(line);
 
       int number_of_lines = line_buffer.size();
+
+      std::cout << "Number of lines in the linbe buffer: " << number_of_lines << std::endl;
 
       Message msg;
       std::string message;
@@ -138,19 +145,27 @@ void connection::handle_read(const boost::system::error_code & error, std::size_
       {
         //Process create, join, undo
         message = line_buffer.front();
+        // std::cout << "." << message << "." << std::endl;
+        std::cout << "Length of msg: " << message.length() << std::endl;
+        // if (strncmp(message.c_str(), "CREATE", 7) == 0)
         if (message == "CREATE")
         {
 
           msg.type = MESSAGE_CREATE;
           
+          // std::cout << "Entered the create phase." << std::endl;
 
           char buffer[100];
           sscanf(line_buffer[1].c_str(), "Name:%s", buffer);
           msg.create.name = std::string(buffer);
 
+          // std::cout << "name : " << msg.create.name << std::endl;
+
           char buff2[100];
           sscanf(line_buffer[2].c_str(), "Password:%s", buff2);
           msg.create.password = std::string(buff2);
+
+          // std::cout << "password : " << msg.create.password << std::endl;
 
         } else if (message == "JOIN")
         {
