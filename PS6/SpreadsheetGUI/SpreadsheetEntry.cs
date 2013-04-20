@@ -68,9 +68,15 @@ namespace SpreadsheetClient
                 MessageBox.Show("The Spreadsheet Name entered was invalid");
             else
             {
-                model.SendMessage("JOIN");
-                model.SendMessage("Name:" + spreadsheetNameTextBox.Text);
-                model.SendMessage("Password:" + passwordTextBox.Text);
+                string message = "CREATE\nName:" + ssName + "\nPassword:" + password;
+                model.SendMessage(message);
+
+                //model.SendMessage("JOIN");
+                //model.SendMessage("Name:" + spreadsheetNameTextBox.Text);
+                //model.SendMessage("Password:" + passwordTextBox.Text);
+                //For Debug
+                //SpreadsheetApplicationContext appContext = SpreadsheetApplicationContext.getAppContext();
+                //appContext.RunForm(new SpreadsheetGUI(ssName, password));
             }
         }
 
@@ -91,9 +97,14 @@ namespace SpreadsheetClient
                 MessageBox.Show("The Spreadsheet Name entered was invalid");
             else
             {
-                model.SendMessage("CREATE");
-                model.SendMessage("Name:" + spreadsheetNameTextBox.Text);
-                model.SendMessage("Password:" + passwordTextBox.Text);
+                string message = "CREATE\nName:" + ssName + "\nPassword:" + password;
+                model.SendMessage(message);
+                //model.SendMessage("CREATE");
+                //model.SendMessage("Name:" + ssName);
+                //model.SendMessage("Password:" + password);
+                //For Debug
+                //SpreadsheetApplicationContext appContext = SpreadsheetApplicationContext.getAppContext();
+                //appContext.RunForm(new SpreadsheetGUI(ssName, password));
             }
         }
 

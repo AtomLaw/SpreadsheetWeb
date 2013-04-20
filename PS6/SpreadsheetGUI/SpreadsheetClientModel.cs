@@ -29,17 +29,23 @@ namespace SpreadsheetClient
 
         public event Action<String> ChangeFailEvent;
 
+        public event Action<String> ChangeWaitEvent;
+
         public event Action<String> UndoOKEvent;
 
         public event Action<String> UndoFailEvent;
 
         public event Action<String> UndoEndEvent;
 
+        public event Action<String> UndoWaitEvent;
+
         public event Action<String> UpdateEvent;
 
         public event Action<String> SaveOKEvent;
 
         public event Action<String> SaveFailEvent;
+
+        public event Action<String> Debug;
 
         public event Action NullMessageReceivedEvent;
 
@@ -99,7 +105,7 @@ namespace SpreadsheetClient
                 {
                     TcpClient client = new TcpClient(hostName, serverPort);
                     socket = new StringSocket(client.Client, UTF8Encoding.Default);
-                    socket.BeginSend("STUMP", (e, o) => { }, null);
+                    socket.BeginSend("STUMP" + "\n", (e, o) => { }, null);
                     isConnected = true;
                     socket.BeginReceive(LineReceived, null);
                 }
@@ -148,6 +154,8 @@ namespace SpreadsheetClient
         /// <param name="p"></param>
         private void LineReceived(String line, Exception e, object p)
         {
+            Debug(line);
+            
             //string message, name;
             if (line == null)
             {
@@ -179,6 +187,10 @@ namespace SpreadsheetClient
             {
                 ChangeOKEvent(line);
             }
+            else if (line.StartsWith("CHANGE WAIT"))
+            {
+                ChangeOKEvent(line);
+            }
             else if (line.StartsWith("UNDO OK"))
             {
                 UndoOKEvent(line);
@@ -186,6 +198,10 @@ namespace SpreadsheetClient
             else if (line.StartsWith("UNDO END"))
             {
                 UndoEndEvent(line);
+            }
+            else if (line.StartsWith("UNDO WAIT"))
+            {
+                UndoWaitEvent(line);
             }
             else if (line.StartsWith("UNDO FAIL"))
             {
