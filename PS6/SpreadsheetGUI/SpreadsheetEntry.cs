@@ -1,0 +1,117 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Windows.Forms;
+
+namespace SpreadsheetClient
+{
+    public partial class SpreadsheetEntry : Form
+    {
+
+        SpreadsheetClientModel model;
+
+        //host name
+        string host;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public SpreadsheetEntry(string host)
+        {
+            InitializeComponent();
+
+            model = SpreadsheetClient.model;
+
+            this.host = host;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void newConnectionMenuItem_Click(object sender, EventArgs e)
+        {
+            new SpreadsheetClient();
+        }
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void disconnectMenuItem_Click(object sender, EventArgs e)
+        {
+            new SpreadsheetClient();
+            Close();
+        }
+
+
+        /// <summary>
+        /// Send a request to join an existing spreadsheet to the server.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void joinExistingButton_Click(object sender, EventArgs e)
+        {
+            string ssName = spreadsheetNameTextBox.Text;
+            string password = passwordTextBox.Text;
+
+            if (password == null || password.Length < 1)
+                MessageBox.Show("The password entered was invalid");
+            else if (ssName == null || ssName.Length < 1)
+                MessageBox.Show("The Spreadsheet Name entered was invalid");
+            else
+            {
+                model.SendMessage("JOIN");
+                model.SendMessage("Name:" + spreadsheetNameTextBox.Text);
+                model.SendMessage("Password:" + passwordTextBox.Text);
+            }
+        }
+
+
+        /// <summary>
+        /// Send a message to the server requesting to create a new spreadsheet
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void createNewButton_Click(object sender, EventArgs e)
+        {
+            string ssName = spreadsheetNameTextBox.Text;
+            string password = passwordTextBox.Text;
+
+            if (password == null || password.Length < 1)
+                MessageBox.Show("The password entered was invalid");
+            else if (ssName == null || ssName.Length < 1)
+                MessageBox.Show("The Spreadsheet Name entered was invalid");
+            else
+            {
+                model.SendMessage("CREATE");
+                model.SendMessage("Name:" + spreadsheetNameTextBox.Text);
+                model.SendMessage("Password:" + passwordTextBox.Text);
+            }
+        }
+
+
+        /// <summary>
+        /// Always disconnect from the server on close.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void SpreadsheetEntry_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            model.CloseConnection();
+        }
+
+        private void SpreadsheetEntry_Load(object sender, EventArgs e)
+        {
+            hostNameLabel.Text = this.host;
+        }
+
+    }
+}

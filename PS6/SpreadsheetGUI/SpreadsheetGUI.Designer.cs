@@ -39,7 +39,6 @@
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.menu_File = new System.Windows.Forms.ToolStripMenuItem();
             this.menu_File_New = new System.Windows.Forms.ToolStripMenuItem();
-            this.menu_File_Open = new System.Windows.Forms.ToolStripMenuItem();
             this.menu_File_Save = new System.Windows.Forms.ToolStripMenuItem();
             this.menu_File_Exit = new System.Windows.Forms.ToolStripMenuItem();
             this.editToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -173,7 +172,6 @@
             this.menu_File.BackColor = System.Drawing.SystemColors.GradientInactiveCaption;
             this.menu_File.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.menu_File_New,
-            this.menu_File_Open,
             this.menu_File_Save,
             this.menu_File_Exit});
             this.menu_File.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
@@ -187,13 +185,6 @@
             this.menu_File_New.Size = new System.Drawing.Size(152, 22);
             this.menu_File_New.Text = "New Session";
             this.menu_File_New.Click += new System.EventHandler(this.menu_File_New_Click);
-            // 
-            // menu_File_Open
-            // 
-            this.menu_File_Open.Name = "menu_File_Open";
-            this.menu_File_Open.Size = new System.Drawing.Size(152, 22);
-            this.menu_File_Open.Text = "Join Other";
-            this.menu_File_Open.Click += new System.EventHandler(this.menu_File_Open_Click);
             // 
             // menu_File_Save
             // 
@@ -220,7 +211,7 @@
             // undoToolStripMenuItem
             // 
             this.undoToolStripMenuItem.Name = "undoToolStripMenuItem";
-            this.undoToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.undoToolStripMenuItem.Size = new System.Drawing.Size(103, 22);
             this.undoToolStripMenuItem.Text = "Undo";
             this.undoToolStripMenuItem.Click += new System.EventHandler(this.undoToolStripMenuItem_Click);
             // 
@@ -249,7 +240,7 @@
             this.ssp.TabIndex = 0;
             this.ssp.SelectionChanged += new SS.SelectionChangedHandler(this.spreadsheetPanel1_SelectionChanged);
             // 
-            // Form1
+            // SpreadsheetGUI
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -257,7 +248,7 @@
             this.Controls.Add(this.container_Master);
             this.ForeColor = System.Drawing.SystemColors.ControlText;
             this.MainMenuStrip = this.menuStrip1;
-            this.Name = "Form1";
+            this.Name = "SpreadsheetGUI";
             this.Text = "SimpleSheets";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
             this.container_Master.Panel1.ResumeLayout(false);
@@ -283,7 +274,6 @@
         private System.Windows.Forms.Label label_Value;
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem menu_File;
-        private System.Windows.Forms.ToolStripMenuItem menu_File_Open;
         private System.Windows.Forms.ToolStripMenuItem menu_File_Save;
         private System.Windows.Forms.ToolStripMenuItem menu_File_Exit;
         private System.Windows.Forms.ToolStripMenuItem menu_File_New;

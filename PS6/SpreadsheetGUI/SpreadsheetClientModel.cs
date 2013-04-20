@@ -29,10 +29,6 @@ namespace SpreadsheetClient
 
         public event Action<String> ChangeFailEvent;
 
-        public event Action NullMessageReceivedEvent;
-
-        public event Action<Exception> ConnectionErrorEvent;
-
         public event Action<String> UndoOKEvent;
 
         public event Action<String> UndoFailEvent;
@@ -44,6 +40,10 @@ namespace SpreadsheetClient
         public event Action<String> SaveOKEvent;
 
         public event Action<String> SaveFailEvent;
+
+        public event Action NullMessageReceivedEvent;
+
+        public event Action<Exception> ConnectionErrorEvent;
 
         //bool tracks client connection
         private bool isConnected;
@@ -157,20 +157,16 @@ namespace SpreadsheetClient
             }
             else if (line.StartsWith("CREATE FAIL"))
             {
-                //close the model and inform the player that his opponent disconnected
-                this.CloseConnection();
                 CreateFailEvent(line);
             }
             else if (line.StartsWith("CREATE OK"))
             {
                 CreateOKEvent(line);
             }
-            //If the message is a starting message
             else if (line.StartsWith("JOIN FAIL"))
             {
                 JoinFailEvent(line);
             }
-            //if the time is being sent
             else if (line.StartsWith("JOIN OK"))
             {
                 JoinOKEvent(line);

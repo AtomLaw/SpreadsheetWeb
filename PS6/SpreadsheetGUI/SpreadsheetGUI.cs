@@ -15,20 +15,25 @@ namespace SpreadsheetClient
     public partial class SpreadsheetGUI : Form
     {
 
+        private SpreadsheetClientModel model;
+
         private Spreadsheet ss;
 
         //class wide variables to track whether a file has been saved
         //Mostly to avoid repeated Save Dialogs and for 
         //Save as functionality.
         private bool UpToDate;
-        private string savedName;
+        private string name;
+        private string password;
 
         /// <summary>
         /// The spreadsheet window
         /// </summary>
-        public SpreadsheetGUI()
+        public SpreadsheetGUI(string name, string password)
         {
             InitializeComponent();
+
+            model = SpreadsheetClient.model;
 
             //create a new spreadsheet, save the version as ps6
             ss = new Spreadsheet(IsValid, Normalize, "ps6"); 
@@ -38,7 +43,9 @@ namespace SpreadsheetClient
             AcceptButton = btn_SetContents;
             RefreshTextFields(ssp); //refresh the text fields at the top
             UpToDate = true; //this file has not been saved before
-            savedName = ""; //thus it has no filename
+
+            this.name = name;
+            this.password = password;
         }
 
 
@@ -170,7 +177,8 @@ namespace SpreadsheetClient
         /// <param name="e"></param>
         private void menu_File_New_Click(object sender, EventArgs e)
         {
-            SpreadsheetApplicationContext.getAppContext().RunForm(new SpreadsheetGUI());
+            //SpreadsheetApplicationContext.getAppContext().RunForm(new ConnectToHostForm());
+            SpreadsheetClient.FocusSpreadSheetEntry();
         }
 
         /// <summary>
@@ -183,21 +191,27 @@ namespace SpreadsheetClient
         {
             //the spreadsheet has changed, warn the user.
             if (ss.Changed)
-                DialogResult = MessageBox.Show("Save Changes? If you say no, Changes will be lost.", "Changes Have Been Made",
-                    MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning);
-            switch (DialogResult)
-            {
-                case DialogResult.Cancel:
-                    e.Cancel = true;
-                    return;
+                menu_File_Save_Click(sender, e);
 
-                case DialogResult.Yes:
-                    menu_File_Save_Click(sender, e);
-                    break;
+            model.SendMessage("LEAVE");
+            model.SendMessage("Name:"+name);
+            model.SendMessage("Password:"+password);
 
-                case DialogResult.No:
-                    break;
-            }
+            //    DialogResult = MessageBox.Show("Save Changes? If you say no, Changes will be lost.", "Changes Have Been Made",
+            //        MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning);
+            //switch (DialogResult)
+            //{
+            //    case DialogResult.Cancel:
+            //        e.Cancel = true;
+            //        return;
+
+            //    case DialogResult.Yes:
+            //        menu_File_Save_Click(sender, e);
+            //        break;
+
+            //    case DialogResult.No:
+            //        break;
+            //}
         }
 
 
@@ -215,7 +229,7 @@ namespace SpreadsheetClient
                 //If the client's copy isn't up to date, they can't commit a save
             }
             else
-                ss.Save(savedName); //if the client is presumed up to date, attempt a save.
+                ss.Save(name); //if the client is presumed up to date, attempt a save.
         }
 
 
@@ -230,48 +244,48 @@ namespace SpreadsheetClient
         }
 
 
-        /// <summary>
-        /// Opens a saved file and Displays the spreadsheet.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void menu_File_Open_Click(object sender, EventArgs e)
-        {
-            Stream stream; //used for initializing the new window.
-            OpenFileDialog fileBrowser = new OpenFileDialog(); //new file browser window
-            fileBrowser.Filter = "SimpleSheet files (*.ss)|*.ss|All Files (*.*)|*.*"; //filter to .ss or All files.
-            if (fileBrowser.ShowDialog() == DialogResult.OK)
-            {
-                try
-                {
-                    if ((stream = fileBrowser.OpenFile()) != null)
-                    {
-                        using (stream)
-                        {
-                            SpreadsheetGUI newForm = new SpreadsheetGUI(); //create a new window
-                            //fill a spreadsheet using the saved file.
-                            newForm.ss = new Spreadsheet(fileBrowser.FileName, IsValid, Normalize, "ps6");
-                            //run the new window
-                            SpreadsheetApplicationContext.getAppContext().RunForm(newForm);
-                            //fill the spreadsheet panel
-                            FillSpreadSheet(newForm.ssp, newForm.ss);
-                            //note this is a saved file
-                            newForm.UpToDate = true;
-                            //store the filename
-                            newForm.savedName = fileBrowser.FileName;
-                        }
-                    }
-                }
-                catch (Exception x)
-                {
-                    if (x is IOException)
-                        MessageBox.Show("There was a problem reading the file", "File Read Error");
-                    else if (x is SpreadsheetReadWriteException)
-                        MessageBox.Show(x.Message);
-                }
+        ///// <summary>
+        ///// Opens a saved file and Displays the spreadsheet.
+        ///// </summary>
+        ///// <param name="sender"></param>
+        ///// <param name="e"></param>
+        //private void menu_File_JoinNew_Click(object sender, EventArgs e)
+        //{
+        //    Stream stream; //used for initializing the new window.
+        //    OpenFileDialog fileBrowser = new OpenFileDialog(); //new file browser window
+        //    fileBrowser.Filter = "SimpleSheet files (*.ss)|*.ss|All Files (*.*)|*.*"; //filter to .ss or All files.
+        //    if (fileBrowser.ShowDialog() == DialogResult.OK)
+        //    {
+        //        try
+        //        {
+        //            if ((stream = fileBrowser.OpenFile()) != null)
+        //            {
+        //                using (stream)
+        //                {
+        //                    SpreadsheetGUI newForm = new SpreadsheetGUI(); //create a new window
+        //                    //fill a spreadsheet using the saved file.
+        //                    newForm.ss = new Spreadsheet(fileBrowser.FileName, IsValid, Normalize, "ps6");
+        //                    //run the new window
+        //                    SpreadsheetApplicationContext.getAppContext().RunForm(newForm);
+        //                    //fill the spreadsheet panel
+        //                    FillSpreadSheet(newForm.ssp, newForm.ss);
+        //                    //note this is a saved file
+        //                    newForm.UpToDate = true;
+        //                    //store the filename
+        //                    newForm.name = fileBrowser.FileName;
+        //                }
+        //            }
+        //        }
+        //        catch (Exception x)
+        //        {
+        //            if (x is IOException)
+        //                MessageBox.Show("There was a problem reading the file", "File Read Error");
+        //            else if (x is SpreadsheetReadWriteException)
+        //                MessageBox.Show(x.Message);
+        //        }
 
-            }
-        }
+        //    }
+        //}
 
         private void undoToolStripMenuItem_Click(object sender, EventArgs e)
         {
