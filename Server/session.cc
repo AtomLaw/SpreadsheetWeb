@@ -2,7 +2,7 @@
 #include "spreadsheet.h"
 // #include "main.cc"
 
-class connection;
+// class connection;
 
 class session 
 {
