@@ -40,29 +40,47 @@ void connection::send_message(std::string message)
 }
 
 
-Message connection::process_string()
-{
+// Message connection::process_string()
+// {
   
-  std::string line;
-  int number_of_lines = line_buffer.size();
+//   std::string line;
+//   int number_of_lines = line_buffer.size();
+//   line = line_buffer.front();
 
-  switch (number_of_lines)
-  {
-    case 2:
-      line = line_buffer.front();
+//   switch (number_of_lines)
+//   {
+//     case 2:
+      
+//       if (line == "SAVE")
+//       {
 
+//       } else if (line == "LEAVE") 
+//       {
 
-    break;
+//       } 
+
+//     break;
     
-    case 3:
-      line = line_buffer.front();
-    break;
+//     case 3:
+//       if (line == "CREATE")
+//       {
+
+//       } else if (line == "JOIN")
+//       {
+
+//       } else if (line == "UNDO")
+//       {
+
+//       }
+      
+
+//     break;
     
-    case 6:
-      line = line_buffer.front();
-    break;
-  }
-}
+//     case 6:
+      
+//     break;
+//   }
+// }
 
 // void handle_read(const boost::system::error_code& error,
 //     size_t bytes_transferred)
@@ -88,28 +106,92 @@ void connection::handle_read(const boost::system::error_code & error, std::size_
 
       int number_of_lines = line_buffer.size();
 
+      Message msg;
+      std::string message;
+
       if (number_of_lines == 2)
       {
         //Process Save
         //Process Leave
+        message = line_buffer.front();
+        if (message == "SAVE")
+        {
+          // msg.type = MESSAGE_SAVE;
 
+
+          //Clear the buffer
+          line_buffer.clear();
+        } else if (message == "LEAVE")
+        {
+
+
+          //Clear the buffer
+          line_buffer.clear();
+        } else
+        {
+          read_message(func);
+          return;
+        }
 
       }
       else if (number_of_lines == 3)
       {
         //Process create, join, undo
+        message = line_buffer.front();
+        if (message == "CREATE")
+        {
+
+          msg.type = MESSAGE_CREATE;
+          
+
+          char buffer[100];
+          sscanf(line_buffer[1].c_str(), "Name:%s", buffer);
+          msg.create.name = std::string(buffer);
+
+          char buff2[100];
+          sscanf(line_buffer[2].c_str(), "Password:%s", buff2);
+          msg.create.password = std::string(buff2);
+
+        } else if (message == "JOIN")
+        {
+
+        } else if (message == "UNDO")
+        {
+
+        } 
+        else
+        {
+          read_message(func);
+          return;
+        }
 
       }
       else if (number_of_lines == 6)
       {
 
         //Process change
+        message = line_buffer.front();
+        if (message == "CHANGE")
+        {
+
+        } else
+        {
+          //ERROR, clear buffer
+        }
 
 
       }
+      else if (number_of_lines > 6)
+      {
+        //ERROR
+      } 
+      else
+      {
+        read_message(func);
+        return;
+      }
 
-      Message msg;
-      msg.type = MESSAGE_CREATE;
+      
       func(msg ,this);
       // boost::asio::async_write(*socket,
       //         boost::asio::buffer(line, size),

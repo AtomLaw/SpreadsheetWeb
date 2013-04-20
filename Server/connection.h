@@ -9,23 +9,29 @@
 #include <map>
 #include <queue>
 #include <vector>
+#include <sstream>
+#include <stdio.h>
 
 enum MESSAGE_TYPE
   {
     MESSAGE_CREATE,
-    MESSAGE_JOIN
+    MESSAGE_JOIN,
+    MESSAGE_CHANGE,
+    MESSAGE_UNDO,
+    MESSAGE_SAVE,
+    MESSAGE_LEAVE
   };
 
-union Message
+struct Message
 {
   MESSAGE_TYPE type;
 
-  struct create
+  struct 
   {
     MESSAGE_TYPE type;
     std::string name;
     std::string password;
-  };
+  } create;
 
   struct join
   {
@@ -33,6 +39,36 @@ union Message
     std::string name;
     std::string password;
   };
+
+  struct change 
+  {
+    MESSAGE_TYPE type;
+    std::string name;
+    int version;
+    std::string cell;
+    int length;
+    std::string content;
+  };
+
+  struct undo
+  {
+    MESSAGE_TYPE type;
+    std::string name;
+    int version;
+  };
+
+  struct save
+  {
+    MESSAGE_TYPE type;
+    std::string name;
+  };
+
+  struct leave
+  {
+    MESSAGE_TYPE type;
+    std::string name;
+  };
+
 };
 
 using boost::asio::ip::tcp;
