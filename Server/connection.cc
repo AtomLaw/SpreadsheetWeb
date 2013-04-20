@@ -39,6 +39,31 @@ void connection::send_message(std::string message)
 				       boost::asio::placeholders::error));
 }
 
+
+Message connection::process_string()
+{
+  
+  std::string line;
+  int number_of_lines = line_buffer.size();
+
+  switch (number_of_lines)
+  {
+    case 2:
+      line = line_buffer.front();
+
+
+    break;
+    
+    case 3:
+      line = line_buffer.front();
+    break;
+    
+    case 6:
+      line = line_buffer.front();
+    break;
+  }
+}
+
 // void handle_read(const boost::system::error_code& error,
 //     size_t bytes_transferred)
 void connection::handle_read(const boost::system::error_code & error, std::size_t size, boost::function<void(Message, connection*)> func)
@@ -58,6 +83,30 @@ void connection::handle_read(const boost::system::error_code & error, std::size_
       std::getline(is, line);
 
       std::cout << "Received string : " << line << std::endl;
+
+      line_buffer.push_back(line);
+
+      int number_of_lines = line_buffer.size();
+
+      if (number_of_lines == 2)
+      {
+        //Process Save
+        //Process Leave
+
+
+      }
+      else if (number_of_lines == 3)
+      {
+        //Process create, join, undo
+
+      }
+      else if (number_of_lines == 6)
+      {
+
+        //Process change
+
+
+      }
 
       Message msg;
       msg.type = MESSAGE_CREATE;

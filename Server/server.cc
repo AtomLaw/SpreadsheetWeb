@@ -49,6 +49,10 @@ void server::handle_message(Message msg, connection* conn)
   switch(msg.type){
   case MESSAGE_CREATE:
     std::cout << "Received Create Message" << std::endl;
+    conn->send_message("Received message\n");
+    break;
+  case MESSAGE_JOIN:
+    std::cout << "Received join request" << std::endl;
     break;
   default:
     std::cout << "ERROR" << std::endl;

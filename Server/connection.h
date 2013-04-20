@@ -51,6 +51,8 @@ public:
   
   Message get_message();
 
+  Message process_string();
+
   void read_message(boost::function<void(Message, connection*)> func);
 
   void send_message(std::string message);
