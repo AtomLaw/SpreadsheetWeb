@@ -13,18 +13,26 @@
 enum MESSAGE_TYPE
   {
     MESSAGE_CREATE,
-    MESSAGE_NEW
+    MESSAGE_JOIN
   };
 
 union Message
 {
   MESSAGE_TYPE type;
-  /* struct */
-  /* { */
-  /*   MESSAGE_TYPE type; */
-  /*   std::string name; */
-  /*   std::string password; */
-  /* } create; */
+
+  struct create
+  {
+    MESSAGE_TYPE type;
+    std::string name;
+    std::string password;
+  };
+
+  struct join
+  {
+    MESSAGE_TYPE type;
+    std::string name;
+    std::string password;
+  };
 };
 
 using boost::asio::ip::tcp;
