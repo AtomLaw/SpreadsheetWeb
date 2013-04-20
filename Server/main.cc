@@ -11,12 +11,15 @@
 
 using boost::asio::ip::tcp;
 
+class server;
+
 class connection //connection
 {
 public:
-  connection(boost::asio::io_service& io_service)
-    : socket_(io_service)
+  connection(boost::asio::io_service& io_service, server & server_)
+    : socket_(io_service) 
   {
+    my_server = &server_;
   }
 
   tcp::socket& socket()
@@ -103,6 +106,7 @@ private:
   // char data_[max_length];
   boost::asio::streambuf buffer; //Holds incoming bytes
   // boost::system::error_code error;
+  server * my_server; //The server this connection is a part of
 };
 
 class server
@@ -120,7 +124,7 @@ public:
 private:
   void start_accept()
   {
-    connection* new_connection = new connection(io_service_);
+    connection* new_connection = new connection(io_service_, *this);
     acceptor_.async_accept(new_connection->socket(),
         boost::bind(&server::handle_accept, this, new_connection,
           boost::asio::placeholders::error));
