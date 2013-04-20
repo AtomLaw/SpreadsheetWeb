@@ -1,4 +1,5 @@
 #include "server.h"
+#include "spreadsheet.h"
 
 #include <sstream>
 //Server class
@@ -49,7 +50,7 @@ void server::handle_message(Message msg, connection* conn)
 {
   switch(msg.type){
   case MESSAGE_CREATE:
-    std::cout << "Received Create Message" << std::endl;
+    {    std::cout << "Received Create Message" << std::endl;
     spreadsheet ss(msg.create.name);
     if(ss.exists())
       {
@@ -69,6 +70,7 @@ void server::handle_message(Message msg, connection* conn)
 	    << "Password:" << msg.create.password << "\n";
 	conn->send_message(out.str());
       }	
+    }
     break;
   case MESSAGE_JOIN:
     std::cout << "Received join request" << std::endl;
