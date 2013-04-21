@@ -123,14 +123,22 @@ void connection::handle_read(const boost::system::error_code & error, std::size_
         message = line_buffer.front();
         if (message == "SAVE")
         {
-          // msg.type = MESSAGE_SAVE;
+          msg.type = MESSAGE_SAVE;
 
+          char buffer[100];
+          sscanf(line_buffer[1].c_str(), "Name:%s", buffer);
+          msg.save.name = std::string(buffer);
 
           //Clear the buffer
           line_buffer.clear();
         } else if (message == "LEAVE")
         {
 
+          msg.type = MESSAGE_LEAVE;
+
+          char buffer[100];
+          sscanf(line_buffer[1].c_str(), "Name:%s", buffer);
+          msg.leave.name = std::string(buffer);
 
           //Clear the buffer
           line_buffer.clear();
@@ -145,7 +153,6 @@ void connection::handle_read(const boost::system::error_code & error, std::size_
       {
         //Process create, join, undo
         message = line_buffer.front();
-        // std::cout << "." << message << "." << std::endl;
         std::cout << "Length of msg: " << message.length() << std::endl;
         // if (strncmp(message.c_str(), "CREATE", 7) == 0)
         if (message == "CREATE")
@@ -153,26 +160,49 @@ void connection::handle_read(const boost::system::error_code & error, std::size_
 
           msg.type = MESSAGE_CREATE;
           
-          // std::cout << "Entered the create phase." << std::endl;
 
           char buffer[100];
           sscanf(line_buffer[1].c_str(), "Name:%s", buffer);
           msg.create.name = std::string(buffer);
 
-          // std::cout << "name : " << msg.create.name << std::endl;
 
           char buff2[100];
           sscanf(line_buffer[2].c_str(), "Password:%s", buff2);
           msg.create.password = std::string(buff2);
 
-          // std::cout << "password : " << msg.create.password << std::endl;
+          line_buffer.clear();
 
-        } else if (message == "JOIN")
+
+        } 
+        else if (message == "JOIN")
         {
+          msg.type = MESSAGE_JOIN;
+          
 
-        } else if (message == "UNDO")
+          char buffer[100];
+          sscanf(line_buffer[1].c_str(), "Name:%s", buffer);
+          msg.join.name = std::string(buffer);
+
+
+          char buff2[100];
+          sscanf(line_buffer[2].c_str(), "Password:%s", buff2);
+          msg.join.password = std::string(buff2);
+
+          line_buffer.clear();
+        } 
+        else if (message == "UNDO")
         {
+          msg.type = MESSAGE_UNDO;
 
+          char buffer[100];
+          sscanf(line_buffer[1].c_str(), "Name:%s", buffer);
+          msg.undo.name = std::string(buffer);
+
+          int version;
+          sscanf(line_buffer[2].c_str(), "Version:%i", &version);
+          msg.undo.version = version;
+
+          line_buffer.clear();
         } 
         else
         {
@@ -188,17 +218,49 @@ void connection::handle_read(const boost::system::error_code & error, std::size_
         message = line_buffer.front();
         if (message == "CHANGE")
         {
+          msg.type = MESSAGE_CHANGE;
 
-        } else
+          char buffer[100];
+          sscanf(line_buffer[1].c_str(), "Name:%s", buffer);
+          msg.change.name = std::string(buffer);
+
+          int version;
+          sscanf(line_buffer[2].c_str(), "Version:%i", &version);
+          msg.change.version = version;
+
+
+          char buffer2[100];
+          sscanf(line_buffer[3].c_str(), "Cell:%s", buffer2);
+          msg.change.cell = buffer2;
+
+
+          int length;
+          sscanf(line_buffer[4].c_str(), "Length:%i", &length);
+          msg.change.length = length;
+
+
+          std::string contents = line_buffer[5].substr(0, length);
+          msg.change.content = contents;
+
+
+          line_buffer.clear();
+
+
+
+        }
+        else
         {
           //ERROR, clear buffer
+          line_buffer.clear();
         }
 
 
       }
       else if (number_of_lines > 6)
       {
-        //ERROR
+        //ERROR, clear buffer
+        line_buffer.clear();
+
       } 
       else
       {

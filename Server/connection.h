@@ -33,14 +33,14 @@ struct Message
     std::string password;
   } create;
 
-  struct join
+  struct
   {
     MESSAGE_TYPE type;
     std::string name;
     std::string password;
-  };
+  } join;
 
-  struct change 
+  struct 
   {
     MESSAGE_TYPE type;
     std::string name;
@@ -48,26 +48,26 @@ struct Message
     std::string cell;
     int length;
     std::string content;
-  };
+  } change;
 
-  struct undo
+  struct 
   {
     MESSAGE_TYPE type;
     std::string name;
     int version;
-  };
+  } undo;
 
-  struct save
+  struct 
   {
     MESSAGE_TYPE type;
     std::string name;
-  };
+  } save;
 
-  struct leave
+  struct 
   {
     MESSAGE_TYPE type;
     std::string name;
-  };
+  } leave;
 
 };
 
