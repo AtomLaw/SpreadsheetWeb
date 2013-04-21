@@ -97,6 +97,12 @@
     <Compile Include="ConnectToHostForm.Designer.cs">
       <DependentUpon>ConnectToHostForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="DebugConsole.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DebugConsole.Designer.cs">
+      <DependentUpon>DebugConsole.cs</DependentUpon>
+    </Compile>
     <Compile Include="SpreadsheetEntry.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -114,6 +120,9 @@
     <Compile Include="SpreadsheetClientModel.cs" />
     <EmbeddedResource Include="ConnectToHostForm.resx">
       <DependentUpon>ConnectToHostForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DebugConsole.resx">
+      <DependentUpon>DebugConsole.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="SpreadsheetEntry.resx">
       <DependentUpon>SpreadsheetEntry.cs</DependentUpon>

@@ -92,9 +92,12 @@ namespace SpreadsheetClient
 
         private static SpreadsheetEntry entryForm;
 
+        private static DebugConsole debug;
+
         private static bool ss_open_successful;
 
         private static Dictionary<string, SpreadsheetGUI> sheets;
+
 
         /// <summary>
         /// Create a SpreadsheetClientModel and register its events
@@ -104,9 +107,16 @@ namespace SpreadsheetClient
             //Register client model events
             RegisterEvents();
             ss_open_successful = false;
-            //entryForm = new SpreadsheetEntry("");
+            sheets = new Dictionary<string, SpreadsheetGUI>();
 
             SpreadsheetApplicationContext appContext = SpreadsheetApplicationContext.getAppContext();
+            if (debug == null)
+            {
+                debug = new DebugConsole();
+                appContext.RunForm(debug);
+            }
+            //entryForm = new SpreadsheetEntry("");
+
             appContext.RunForm(new ConnectToHostForm());
         }
 
@@ -197,7 +207,7 @@ namespace SpreadsheetClient
 
         private static void model_Debug(string message)
         {
-            MessageBox.Show("Response: " + message);
+            debug.Line(message);
         }
 
         private static void model_NullMessage()
@@ -208,6 +218,7 @@ namespace SpreadsheetClient
         private static void model_CouldNotConnect(Exception e)
         {
             MessageBox.Show("Could not connect to the Spreadsheet Server: " + e.Message);
+            debug.Line(e.Message);
         }
 
         public static void model_UpdateEvent(string message)
@@ -298,7 +309,7 @@ namespace SpreadsheetClient
             ss_open_successful = true;
             string[] Message = message.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None);
             string reason = Message[2];
-            MessageBox.Show("The server was unable to join the session: " + reason);
+            entryForm.SetResponseText("The server was unable to join you to the session: " + reason);
         }
 
         public static void model_JoinOKEvent(string message)
@@ -325,6 +336,7 @@ namespace SpreadsheetClient
             //{
             //    name = message.Substring(message.IndexOf("Name:"));
             //}
+            entryForm.SetResponseText("Join Successful. Setting up Spreadsheet...");
             SpreadsheetGUI sheet = new SpreadsheetGUI(name, password, version);
             sheets.Add(name, sheet);
             //the window is run from the GUI class when the ss is loaded
@@ -371,33 +383,33 @@ namespace SpreadsheetClient
             //do nothing?
         }
 
-        public static void model_CreateFailEvent(string message)
+        public static void model_CreateFailEvent(string name, string message)
         {
-            MessageBox.Show("The server was unable to join the session: " + message);
+            entryForm.SetResponseText("The server was unable to join the session: " + message);
         }
 
         public static void model_CreateOKEvent(string message)
         {
-            MessageBox.Show("Created successfully, please join now!");
-            //pop up dialog box allowing user to join
+            debug.Line("Message: " + message);
+            entryForm.SetResponseText("Created successfully, please join now!");
 
-
-
-            //SpreadsheetApplicationContext appContext = SpreadsheetApplicationContext.getAppContext();
-            //ss_open_successful = true;
-            //string[] Message = message.Split(new string[] {"\r\n", "\n"}, StringSplitOptions.None);
-            //string name = "", password = "";
-            //foreach (string s in Message)
+            SpreadsheetApplicationContext appContext = SpreadsheetApplicationContext.getAppContext();
+            ss_open_successful = true;
+            string[] Message = message.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None);
+            string name = "", password = "";
+            foreach (string s in Message)
+            {
+                if (s.Contains("Name:"))
+                    name = s.Substring(s.IndexOf("Name:")+5, 5);
+                if (s.Contains("Password:"))
+                    password = s.Substring(9);
+            }
+            debug.Line("Parsed Name: " + name);
+            debug.Line("Parsed Password: " + password);
+            //if (message.Contains("Name:"))
             //{
-            //    if (s.Contains("Name:"))
-            //        name = s.Substring(5);
-            //    if (s.Contains("Password:"))
-            //        password = s.Substring(9);
+            //    name = message.Substring(message.IndexOf("Name:"));
             //}
-            ////if (message.Contains("Name:"))
-            ////{
-            ////    name = message.Substring(message.IndexOf("Name:"));
-            ////}
             //SpreadsheetGUI sheet = new SpreadsheetGUI(name, password, 0);
             //sheets.Add(name, sheet);
             //appContext.RunForm(sheet);

@@ -13,13 +13,15 @@ namespace SpreadsheetClient
         //socket used to communicate with the server
         private StringSocket socket;
 
+        private Queue<string> buffer;
+
         /*
          * Register Events to handle calls from the server 
          */
 
         public event Action<String> CreateOKEvent;
 
-        public event Action<String> CreateFailEvent;
+        public event Action<String, String> CreateFailEvent;
 
         public event Action<String> JoinFailEvent;
 
@@ -105,7 +107,7 @@ namespace SpreadsheetClient
                 {
                     TcpClient client = new TcpClient(hostName, serverPort);
                     socket = new StringSocket(client.Client, UTF8Encoding.Default);
-                    socket.BeginSend("STUMP" + "\n", (e, o) => { }, null);
+                    //socket.BeginSend("STUMP" + "\n", (e, o) => { }, null);
                     isConnected = true;
                     socket.BeginReceive(LineReceived, null);
                 }
@@ -154,19 +156,108 @@ namespace SpreadsheetClient
         /// <param name="p"></param>
         private void LineReceived(String line, Exception e, object p)
         {
+            string msg, name, password, content, length, cell, version;
+
+            /*Not Done with swithc-cases below */
+
+            //I need to implement a queue of strings
+            //The queue will look much like that of the server
+            buffer.Enqueue(line);
+
             Debug(line);
+
+            switch (buffer.Count)
+            {
+                case 0:
+                case 1:
+                    msg = buffer.Peek();
+                    if (msg == null)
+                    {
+                        //close the connection
+                        buffer.Clear();
+                        this.CloseConnection();
+                        NullMessageReceivedEvent();
+                        break;
+                    }
+                    else
+                        break;
+                case 2:
+                    break;
+                case 3:
+                    msg = buffer.Peek();
+                    if (msg.StartsWith("CREATE FAIL"))
+                    {
+                        buffer.Dequeue();
+                        name = buffer.Dequeue();
+                        msg = buffer.Dequeue();
+
+                        CreateFailEvent(name, msg);
+                        break;
+                    }
+                    else if (msg.StartsWith("CREATE OK"))
+                    {
+                        CreateOKEvent(line);
+                        break;
+                    }
+                    else if (msg.StartsWith("JOIN FAIL"))
+                    {
+                        JoinFailEvent(line);
+                        break;
+                    }
+                    else if (msg.StartsWith("CHANGE OK"))
+                    {
+                        ChangeOKEvent(line);
+                        break;
+                    }
+                    else if (msg.StartsWith("CHANGE WAIT"))
+                    {
+                        ChangeOKEvent(line);
+                        break;
+                    }
+                    else if (msg.StartsWith("CHANGE FAIL"))
+                    {
+                        ChangeFailEvent(line);
+                        break;
+                    }
+                    else if (line.StartsWith("UNDO END"))
+                    {
+                        UndoEndEvent(line);
+                        break;
+                    }
+                    else if (line.StartsWith("UNDO WAIT"))
+                    {
+                        UndoWaitEvent(line);
+                        break;
+                    }
+                    else if (line.StartsWith("UNDO FAIL"))
+                    {
+                        UndoFailEvent(line);
+                        break;
+                    }
+                    else if (line.StartsWith("SAVE FAIL"))
+                    {
+                        SaveFailEvent(line);
+                        break;
+                    }
+                    else
+                        break;
+                    //still needs work here
+                    
+            }
+            
             
             //string message, name;
             if (line == null)
             {
                 //close the connection
+                buffer.Clear();
                 this.CloseConnection();
                 NullMessageReceivedEvent();
             }
-            else if (line.StartsWith("CREATE FAIL"))
-            {
-                CreateFailEvent(line);
-            }
+            //else if (line.StartsWith("CREATE FAIL"))
+            //{
+            //    CreateFailEvent(line);
+            //}
             else if (line.StartsWith("CREATE OK"))
             {
                 CreateOKEvent(line);

@@ -36,14 +36,14 @@
             this.flowLayoutPanel3 = new System.Windows.Forms.FlowLayoutPanel();
             this.btn_ConnectToServer = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
+            this.response = new System.Windows.Forms.Label();
             this.menuStrip1.SuspendLayout();
             this.flowLayoutPanel3.SuspendLayout();
             this.SuspendLayout();
             // 
             // serverInputTextBox
             // 
-            this.serverInputTextBox.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.serverInputTextBox.Location = new System.Drawing.Point(113, 102);
+            this.serverInputTextBox.Location = new System.Drawing.Point(113, 79);
             this.serverInputTextBox.Name = "serverInputTextBox";
             this.serverInputTextBox.Size = new System.Drawing.Size(277, 20);
             this.serverInputTextBox.TabIndex = 1;
@@ -69,7 +69,7 @@
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(92, 22);
             this.exitToolStripMenuItem.Text = "Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
@@ -86,15 +86,14 @@
             // flowLayoutPanel3
             // 
             this.flowLayoutPanel3.Controls.Add(this.label1);
-            this.flowLayoutPanel3.Location = new System.Drawing.Point(24, 38);
+            this.flowLayoutPanel3.Location = new System.Drawing.Point(24, 37);
             this.flowLayoutPanel3.Name = "flowLayoutPanel3";
-            this.flowLayoutPanel3.Size = new System.Drawing.Size(366, 58);
+            this.flowLayoutPanel3.Size = new System.Drawing.Size(366, 36);
             this.flowLayoutPanel3.TabIndex = 4;
             // 
             // btn_ConnectToServer
             // 
-            this.btn_ConnectToServer.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.btn_ConnectToServer.Location = new System.Drawing.Point(268, 128);
+            this.btn_ConnectToServer.Location = new System.Drawing.Point(268, 105);
             this.btn_ConnectToServer.Name = "btn_ConnectToServer";
             this.btn_ConnectToServer.Size = new System.Drawing.Size(122, 23);
             this.btn_ConnectToServer.TabIndex = 4;
@@ -105,23 +104,35 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(27, 106);
+            this.label2.Location = new System.Drawing.Point(27, 83);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(82, 13);
             this.label2.TabIndex = 5;
             this.label2.Text = "Server Address:";
             // 
+            // response
+            // 
+            this.response.AutoSize = true;
+            this.response.Location = new System.Drawing.Point(327, 136);
+            this.response.Name = "response";
+            this.response.Size = new System.Drawing.Size(0, 13);
+            this.response.TabIndex = 6;
+            // 
             // ConnectToHostForm
             // 
+            this.AcceptButton = this.btn_ConnectToServer;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(408, 163);
+            this.Controls.Add(this.response);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.serverInputTextBox);
             this.Controls.Add(this.menuStrip1);
             this.Controls.Add(this.btn_ConnectToServer);
             this.Controls.Add(this.flowLayoutPanel3);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MainMenuStrip = this.menuStrip1;
+            this.MaximizeBox = false;
             this.Name = "ConnectToHostForm";
             this.Text = "Connect To Host";
             this.menuStrip1.ResumeLayout(false);
@@ -143,5 +154,6 @@
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel3;
         private System.Windows.Forms.Button btn_ConnectToServer;
         private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label response;
     }
 }

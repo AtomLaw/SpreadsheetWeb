@@ -26,6 +26,7 @@ namespace SpreadsheetClient
 
             model = SpreadsheetClient.model;
 
+
             this.host = host;
         }
 
@@ -68,7 +69,7 @@ namespace SpreadsheetClient
                 MessageBox.Show("The Spreadsheet Name entered was invalid");
             else
             {
-                string message = "CREATE\nName:" + ssName + "\nPassword:" + password;
+                string message = "JOIN\nName:" + ssName + "\nPassword:" + password;
                 model.SendMessage(message);
 
                 //model.SendMessage("JOIN");
@@ -122,6 +123,11 @@ namespace SpreadsheetClient
         private void SpreadsheetEntry_Load(object sender, EventArgs e)
         {
             hostNameLabel.Text = this.host;
+        }
+
+        public void SetResponseText(string text)
+        {
+            response.Invoke(new Action(() => {response.Text = text;}));
         }
 
     }

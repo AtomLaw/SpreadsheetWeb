@@ -150,16 +150,16 @@ namespace SpreadsheetClient
                     address = GetCoordinates(s);
                     object v = ss.GetCellValue(s);
                     RefreshTextFields(ssp);
-                    //if it returns a formula error, display that in a more friendly way.
-                    if (v.GetType() == typeof(SpreadsheetUtilities.FormulaError))
-                        ssp.SetValue(address[0], address[1] - 1, "Formula Error");
-                    else
-                    {
+                    ////if it returns a formula error, display that in a more friendly way.
+                    //if (v.GetType() == typeof(SpreadsheetUtilities.FormulaError))
+                    //    ssp.SetValue(address[0], address[1] - 1, "Formula Error");
+                    //else
+                    //{
+                        changeRequests.Enqueue(new KeyValuePair<string, string>(cell, contents));
                         string message = "CHANGE\nName:" + this.name + "\nVersion:" + this.version + "\nCell:" + cell + "\nLength:" + contents.Length + "\n" + contents;
                         model.SendMessage(message);
-                        changeRequests.Enqueue(new KeyValuePair<string, string>(cell, contents));
                         //ssp.SetValue(address[0], address[1] - 1, v.ToString());
-                    }
+                    //}
 
                 }
                 //Set the text fields

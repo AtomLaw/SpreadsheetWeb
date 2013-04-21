@@ -19,6 +19,8 @@ namespace SpreadsheetClient
             InitializeComponent();
 
             model = SpreadsheetClient.model;
+
+            AcceptButton = btn_ConnectToServer;
         }
 
         private void btn_ConnectToServer_Click(object sender, EventArgs e)
@@ -28,6 +30,7 @@ namespace SpreadsheetClient
                 MessageBox.Show("The server address you entered is invalid. Please try again");
             else
             {
+                response.Text = "Connecting...";
                 model.ConnectToServer(server);
 
                 //SpreadsheetClient.OpenSpreadSheetEntry(server);

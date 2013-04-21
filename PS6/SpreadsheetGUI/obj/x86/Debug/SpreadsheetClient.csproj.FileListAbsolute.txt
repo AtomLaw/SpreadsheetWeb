@@ -20,3 +20,4 @@
 \\vmware-host\Shared Folders\Documents\SharedRepos\SpreadsheetWeb\PS6\SpreadsheetGUI\bin\Debug\Formula.dll
 \\vmware-host\Shared Folders\Documents\SharedRepos\SpreadsheetWeb\PS6\SpreadsheetGUI\obj\x86\Debug\SpreadsheetClient.csprojResolveAssemblyReference.cache
 \\vmware-host\Shared Folders\Documents\SharedRepos\SpreadsheetWeb\PS6\SpreadsheetGUI\obj\x86\Debug\SpreadsheetClient.SpreadsheetEntry.resources
+\\vmware-host\Shared Folders\Documents\SharedRepos\SpreadsheetWeb\PS6\SpreadsheetGUI\obj\x86\Debug\SpreadsheetClient.DebugConsole.resources
