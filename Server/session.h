@@ -27,6 +27,7 @@ public:
 
   //Joins a connection to the session
   void join(connection *connection);
+  void leave(connection *connection);
 
 private:
 

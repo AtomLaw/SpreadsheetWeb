@@ -5,6 +5,12 @@ connection::connection(tcp::socket *socket)
   this->socket = socket;
 }
 
+connection::~connection()
+{
+  this->socket->close();
+  delete this->socket;
+}
+
 tcp::socket& connection::get_socket()
 {
   return *(this->socket);

@@ -23,6 +23,22 @@ void session::join(connection *connection)
   connections.push_back(connection);
 }
 
+void session::leave(connection *conn)
+{
+  std::vector<connection*>::iterator i;
+  for(i = connections.begin(); i != connections.end();)
+    {
+      if((*i) == conn)
+	{
+	  i = connections.erase(i);
+	}
+      else
+	{
+	  i++;
+	}
+    }
+}
+
 
 void session::handle_message(Message msg, connection *conn)
 {
@@ -81,11 +97,15 @@ void session::handle_message(Message msg, connection *conn)
       }
       break;
     case MESSAGE_LEAVE:
+      this->leave(conn);
+      delete conn;
       return;
       break;
     default:
       break;
     }
-  
-  conn->read_message(boost::bind(&session::handle_message, this, _1, _2));
+  if(conn)  
+    conn->read_message(boost::bind(&session::handle_message, this, _1, _2));
 }
+
+

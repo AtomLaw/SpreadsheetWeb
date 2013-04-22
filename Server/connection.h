@@ -77,7 +77,7 @@ class connection
 {
 public:
   connection(tcp::socket *socket);
-
+  virtual ~connection();
   tcp::socket& get_socket();
 
   //Starts the connection
