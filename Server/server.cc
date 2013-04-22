@@ -72,11 +72,59 @@ void server::handle_message(Message msg, connection* conn)
       }	
     }
     break;
+
+
   case MESSAGE_JOIN:
+    {
+      spreadsheet ss(msg.join.name);
+      if(ss.exists())
+	{
+	  if(ss.authenticate(msg.join.password))
+	    {
+	      if(sessions.find(msg.join.name) != sessions.end())
+		{
+		  sessions[msg.join.name]->join(conn);
+		}
+	      else
+		{
+		  sessions[msg.join.name] = new session(new spreadsheet(msg.join.name));
+		  sessions[msg.join.name]->join(conn);
+		}
+	      ss.load();
+	      std::string xml = ss.get_xml();
+	      int length = xml.length();
+	      std::ostringstream out;
+	      out << "JOIN OK\n"
+		  << "Name:" << msg.join.name << "\n"
+		  << "Version:" << ss.get_version() << "\n"
+		  << "Length:" << length << "\n"
+		  << xml << "\n";
+	      conn->send_message(out.str()); 
+	      
+	    }
+	  else
+	    {
+	      std::ostringstream out;
+	      out << "JOIN FAIL\n"
+		  << "Name:" << msg.join.name << "\n"
+		  << "User not valid!\n";
+	      conn->send_message(out.str()); 
+	    }
+	}
+      else
+	{
+	  std::ostringstream out;
+	  out << "JOIN FAIL\n"
+	      << "Name:" << msg.join.name << "\n"
+	      << "Spreadsheet does not exist!\n";
+	  conn->send_message(out.str());
+	}
+    }  
     std::cout << "Received join request" << std::endl;
     break;
   default:
     std::cout << "ERROR" << std::endl;
+    
   }
   conn->read_message(boost::bind(&server::handle_message, this,
 				 _1, _2));

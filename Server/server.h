@@ -11,8 +11,7 @@
 
 
 #include "connection.h"
-
-class session;
+#include "session.h"
 
 using boost::asio::ip::tcp;
 //**************************************
