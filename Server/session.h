@@ -33,7 +33,7 @@ private:
   void handle_message(Message msg, connection *conn);
 
   spreadsheet *ss;
-  std::list<connection *> connections;
+  std::vector<connection *> connections;
   std::vector<undo_oper> undo_stack;
 
 

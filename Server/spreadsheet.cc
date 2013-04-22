@@ -41,7 +41,7 @@ bool spreadsheet::load()
   file >> file_password >> file_version;
 
   this->password = file_password;
-  this->version = file_version;
+  //  this->version = file_version;
 
   while(!file.eof())
     {
@@ -54,6 +54,7 @@ bool spreadsheet::load()
     }
   
   file.close();
+  this->loaded = true;
  return true;
 }
 bool spreadsheet::exists()
@@ -92,14 +93,7 @@ bool spreadsheet::is_loaded()
 
 int spreadsheet::get_version()
 { 
-  if(is_loaded())
-    {
       return version;
-    }
-  else
-    {
-      return -1;
-    }
 }
 
 void spreadsheet::update_cell(std::string cell, std::string contents)
