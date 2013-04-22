@@ -71,6 +71,14 @@ void session::handle_message(Message msg, connection *conn)
     case MESSAGE_UNDO:
       break;
     case MESSAGE_SAVE:
+      {
+      this->ss->save();
+      std::ostringstream out;
+      out << "SAVE OK\n"
+	  << "Name:" << msg.save.name << "\n";
+      conn->send_message(out.str());
+      
+      }
       break;
     case MESSAGE_LEAVE:
       return;
