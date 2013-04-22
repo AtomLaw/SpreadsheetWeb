@@ -24,21 +24,22 @@ namespace SpreadsheetClient
         //Save as functionality.
         //private bool UpToDate;
         private string name;
-        private string password;
+        //private string password;
         private string version;
         private Queue<KeyValuePair<string, string>> changeRequests;
 
         /// <summary>
         /// The spreadsheet window
         /// </summary>
-        public SpreadsheetGUI(string name, string password, string version)
+        public SpreadsheetGUI(string name, string version, string xml)
         {
             InitializeComponent();
 
             model = SpreadsheetClient.model;
 
             //create a new spreadsheet, save the version as ps6
-            ss = new Spreadsheet(IsValid, Normalize, "ps6"); 
+            ss = new Spreadsheet(xml, IsValid, Normalize, version); 
+
             //initialize the selection to cell A1
             ssp.SetSelection(0, 0);
             //if the Enter key is struck, assume user means Set Cell Contents
@@ -48,7 +49,7 @@ namespace SpreadsheetClient
             //this.UpToDate = true; //this file has not been saved before
             this.changeRequests = new Queue<KeyValuePair<string, string>>();
             this.name = name;
-            this.password = password;
+            //this.password = password;
             this.version = version;
         }
 
@@ -187,37 +188,38 @@ namespace SpreadsheetClient
         /// <param name="contents"></param>
         public void SetContentsOkay(string version)
         {
-            this.version = version;
             KeyValuePair<string, string> pair = changeRequests.Dequeue();
             string cell = pair.Key;
             string contents = pair.Value;
             int[] address = GetCoordinates(cell);
 
-            IEnumerable<string> dependees = ss.SetContentsOfCell(cell, contents);
-            foreach (string s in dependees)
-            {
-                address = GetCoordinates(s);
-                object v = ss.GetCellValue(s);
-                RefreshTextFields(ssp);
-                //if it returns a formula error, display that in a more friendly way.
-                if (v.GetType() == typeof(SpreadsheetUtilities.FormulaError))
-                    ssp.SetValue(address[0], address[1] - 1, "Formula Error");
-                else
-                {
-                    //string message = "CHANGE\nName:" + this.name + "\nVersion:" + this.version + "\nCell:" + cell + "\nLength:" + contents.Length + "\n" + contents;
-                    //model.SendMessage(message);
-                    ssp.SetValue(address[0], address[1] - 1, v.ToString());
-                }
+            updateContents(cell, contents, version);
 
-            }
-            //Set the text fields
-            FillSpreadSheet(ssp, ss);
+            //IEnumerable<string> dependees = ss.SetContentsOfCell(cell, contents);
+            //foreach (string s in dependees)
+            //{
+            //    address = GetCoordinates(s);
+            //    object v = ss.GetCellValue(s);
+            //    RefreshTextFields(ssp);
+            //    //if it returns a formula error, display that in a more friendly way.
+            //    if (v.GetType() == typeof(SpreadsheetUtilities.FormulaError))
+            //        ssp.SetValue(address[0], address[1] - 1, "Formula Error");
+            //    else
+            //    {
+            //        //string message = "CHANGE\nName:" + this.name + "\nVersion:" + this.version + "\nCell:" + cell + "\nLength:" + contents.Length + "\n" + contents;
+            //        //model.SendMessage(message);
+            //        ssp.SetValue(address[0], address[1] - 1, v.ToString());
+            //    }
+
+            //}
+            ////Set the text fields
+            //FillSpreadSheet(ssp, ss);
            
         }
 
 
         /// <summary>
-        /// 
+        /// Update the contents of the specified cell. Update version.
         /// </summary>
         /// <param name="contents"></param>
         public void updateContents(string cell, string contents, string version)
@@ -231,7 +233,10 @@ namespace SpreadsheetClient
                 address = GetCoordinates(s);
                 object v = ss.GetCellValue(s);
                 RefreshTextFields(ssp);
-                ssp.SetValue(address[0], address[1] - 1, v.ToString());
+                if (v.GetType() == typeof(SpreadsheetUtilities.FormulaError))
+                    ssp.SetValue(address[0], address[1] - 1, "Formula Error");
+                else
+                    ssp.SetValue(address[0], address[1] - 1, v.ToString());
             }
             //Set the text fields
             FillSpreadSheet(ssp, ss);
@@ -259,12 +264,24 @@ namespace SpreadsheetClient
         private void Form1_FormClosing(object sender, CancelEventArgs e)
         {
             //the spreadsheet has changed, warn the user.
-            if (ss.Changed)
-                menu_File_Save_Click(sender, e);
+            DialogResult = MessageBox.Show("Do you want to save before you exit?", "Really Exit?",
+            MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning);
+            switch (DialogResult)
+            {
+                case DialogResult.Cancel:
+                    e.Cancel = true;
+                    return;
 
-            model.SendMessage("LEAVE");
-            model.SendMessage("Name:"+name);
-            model.SendMessage("Password:"+password);
+                case DialogResult.Yes:
+                    menu_File_Save_Click(sender, e);
+                    break;
+
+                case DialogResult.No:
+                    break;
+            }
+
+            model.SendMessage("LEAVE\nName:"+this.name);
+            //model.SendMessage("Password:"+password);
 
             //    DialogResult = MessageBox.Show("Save Changes? If you say no, Changes will be lost.", "Changes Have Been Made",
             //        MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning);
@@ -304,6 +321,7 @@ namespace SpreadsheetClient
         /// <param name="e"></param>
         private void menu_File_Exit_Click(object sender, EventArgs e)
         {
+            //model.SendMessage("LEAVE\nName:"+this.name);
             Close();
         }
 
@@ -316,7 +334,7 @@ namespace SpreadsheetClient
         public void JoinNew(string xml, string name, string version)
         {
             //fill a spreadsheet using the saved file.
-            this.ss = new Spreadsheet(name, IsValid, Normalize, version);
+            this.ss = new Spreadsheet(xml, IsValid, Normalize, version);
             //run the new window
             SpreadsheetApplicationContext.getAppContext().RunForm(this);
             //fill the spreadsheet panel

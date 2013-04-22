@@ -20,6 +20,8 @@ namespace SpreadsheetClient
 
             model = SpreadsheetClient.model;
 
+            this.KeyPreview = true;
+
             AcceptButton = btn_ConnectToServer;
         }
 
@@ -51,6 +53,13 @@ namespace SpreadsheetClient
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Close();
+            Application.Exit();
+            //SpreadsheetClient.CloseAll();
+        }
+
+        private void openDebugConsoleToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SpreadsheetClient.showDebug();   
         }
 
     }

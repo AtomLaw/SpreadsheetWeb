@@ -37,6 +37,7 @@
             this.btn_ConnectToServer = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
             this.response = new System.Windows.Forms.Label();
+            this.openDebugConsoleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.flowLayoutPanel3.SuspendLayout();
             this.SuspendLayout();
@@ -61,16 +62,17 @@
             // fileToolStripMenuItem
             // 
             this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.openDebugConsoleToolStripMenuItem,
             this.exitToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
             this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
-            this.fileToolStripMenuItem.Text = "File";
+            this.fileToolStripMenuItem.Text = "&File";
             // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(92, 22);
-            this.exitToolStripMenuItem.Text = "Exit";
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
+            this.exitToolStripMenuItem.Text = "E&xit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
             // label1
@@ -97,7 +99,7 @@
             this.btn_ConnectToServer.Name = "btn_ConnectToServer";
             this.btn_ConnectToServer.Size = new System.Drawing.Size(122, 23);
             this.btn_ConnectToServer.TabIndex = 4;
-            this.btn_ConnectToServer.Text = "Connect";
+            this.btn_ConnectToServer.Text = "&Connect";
             this.btn_ConnectToServer.UseVisualStyleBackColor = true;
             this.btn_ConnectToServer.Click += new System.EventHandler(this.btn_ConnectToServer_Click);
             // 
@@ -118,6 +120,13 @@
             this.response.Size = new System.Drawing.Size(0, 13);
             this.response.TabIndex = 6;
             // 
+            // openDebugConsoleToolStripMenuItem
+            // 
+            this.openDebugConsoleToolStripMenuItem.Name = "openDebugConsoleToolStripMenuItem";
+            this.openDebugConsoleToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
+            this.openDebugConsoleToolStripMenuItem.Text = "Open De&bug Console";
+            this.openDebugConsoleToolStripMenuItem.Click += new System.EventHandler(this.openDebugConsoleToolStripMenuItem_Click);
+            // 
             // ConnectToHostForm
             // 
             this.AcceptButton = this.btn_ConnectToServer;
@@ -131,6 +140,7 @@
             this.Controls.Add(this.btn_ConnectToServer);
             this.Controls.Add(this.flowLayoutPanel3);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.KeyPreview = true;
             this.MainMenuStrip = this.menuStrip1;
             this.MaximizeBox = false;
             this.Name = "ConnectToHostForm";
@@ -155,5 +165,6 @@
         private System.Windows.Forms.Button btn_ConnectToServer;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label response;
+        private System.Windows.Forms.ToolStripMenuItem openDebugConsoleToolStripMenuItem;
     }
 }

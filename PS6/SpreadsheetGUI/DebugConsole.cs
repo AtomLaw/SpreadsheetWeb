@@ -36,10 +36,21 @@ namespace SpreadsheetClient
         /// <param name="text"></param>
         public void Line(string text)
         {
-            if(console.InvokeRequired)
+            if (console.InvokeRequired)
                 console.Invoke(new Action(() => { console.AppendText("\n" + text + "\n"); }));
+            else if (console.Disposing)
+                return;
             else
                 console.AppendText("\n" + text + "\n");
+        }
+
+        private void DebugConsole_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (Application.OpenForms.Count > 1)
+            {
+                Hide();
+                e.Cancel = true;
+            }
         }
 
     }

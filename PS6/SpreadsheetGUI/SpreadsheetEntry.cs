@@ -26,19 +26,20 @@ namespace SpreadsheetClient
 
             model = SpreadsheetClient.model;
 
+            this.KeyPreview = true;
 
             this.host = host;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void newConnectionMenuItem_Click(object sender, EventArgs e)
-        {
-            new SpreadsheetClient();
-        }
+        ///// <summary>
+        ///// 
+        ///// </summary>
+        ///// <param name="sender"></param>
+        ///// <param name="e"></param>
+        //private void newConnectionMenuItem_Click(object sender, EventArgs e)
+        //{
+        //    new SpreadsheetClient();
+        //}
 
 
         /// <summary>
@@ -127,8 +128,30 @@ namespace SpreadsheetClient
 
         public void SetResponseText(string text)
         {
-            response.Invoke(new Action(() => {response.Text = text;}));
+            if (response.Disposing || response.IsDisposed)
+                return;
+            else if(response.InvokeRequired)
+                response.Invoke(new Action(() => {response.Text = text;}));
+            else
+                response.Text = text;
         }
+
+        private void showDebugConsoleToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SpreadsheetClient.showDebug();
+        }
+
+        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Close();
+            Application.Exit();
+            //SpreadsheetClient.CloseAll();
+        }
+
+        //private void KeyDown(object sender, EventArgs e)
+        //{
+        //    if(e.Alt && e.KeyCode == Keys.N)
+        //}
 
     }
 }

@@ -110,11 +110,12 @@ namespace SpreadsheetClient
             sheets = new Dictionary<string, SpreadsheetGUI>();
 
             SpreadsheetApplicationContext appContext = SpreadsheetApplicationContext.getAppContext();
-            if (debug == null)
-            {
-                debug = new DebugConsole();
-                appContext.RunForm(debug);
-            }
+            //debug = new DebugConsole();
+            //if (debug == null)
+            //{
+            //    debug = new DebugConsole();
+            //    appContext.RunForm(debug);
+            //}
             //entryForm = new SpreadsheetEntry("");
 
             appContext.RunForm(new ConnectToHostForm());
@@ -163,7 +164,8 @@ namespace SpreadsheetClient
 
 
         /// <summary>
-        /// 
+        /// Opens a Spreadsheet Entry form.  There should ever only be one
+        /// Spreadsheet entry form for any instance of the program.
         /// </summary>
         public static void OpenSpreadSheetEntry(string host)
         {
@@ -173,14 +175,45 @@ namespace SpreadsheetClient
             appContext.RunForm(entryForm);
         }
 
+
         /// <summary>
-        /// 
+        /// Brings the entry form to the top level.
         /// </summary>
         public static void FocusSpreadSheetEntry()
         {
             entryForm.Activate();
         }
 
+
+        /// <summary>
+        /// Closes all open windows running in this instance of the client.
+        /// </summary>
+        public static void CloseAll()
+        {
+            Application.Exit();
+        }
+
+
+        /// <summary>
+        /// Shows the DebugConsole window
+        /// </summary>
+        public static void showDebug()
+        {
+            if (debug == null)
+                debug = new DebugConsole();
+            SpreadsheetApplicationContext c = SpreadsheetApplicationContext.getAppContext();
+            //Invoke(new Action(() => { c.RunForm(debug); }));
+            if (debug.IsDisposed)
+                debug = new DebugConsole();
+            c.RunForm(debug);
+            debug.Activate();
+        }
+
+
+        /// <summary>
+        /// Creates the member client model and registers all the
+        /// clients methods to the model.
+        /// </summary>
         private static void RegisterEvents()
         {
             model = new SpreadsheetClientModel();
@@ -201,15 +234,33 @@ namespace SpreadsheetClient
             model.UpdateEvent += model_UpdateEvent;
             model.ConnectionErrorEvent += model_CouldNotConnect;
             model.NullMessageReceivedEvent += model_NullMessage;
-
+            model.ErrorEvent += model_ErrorEvent;
             model.Debug += model_Debug;
         }
 
-        private static void model_Debug(string message)
+        /// <summary>
+        /// 
+        /// </summary>
+        static void model_ErrorEvent()
         {
-            debug.Line(message);
+            throw new NotImplementedException();
         }
 
+
+        /// <summary>
+        /// For printing out any debugging information to the DebugConsole.
+        /// </summary>
+        /// <param name="message"></param>
+        private static void model_Debug(string message)
+        {
+            if(debug != null)
+                debug.Line(message);
+        }
+
+
+        /// <summary>
+        /// 
+        /// </summary>
         private static void model_NullMessage()
         {
             MessageBox.Show("Your connection was lost");
@@ -218,203 +269,93 @@ namespace SpreadsheetClient
         private static void model_CouldNotConnect(Exception e)
         {
             MessageBox.Show("Could not connect to the Spreadsheet Server: " + e.Message);
-            debug.Line(e.Message);
+            if (debug != null)
+                debug.Line(e.Message);
         }
 
-        public static void model_UpdateEvent(string message)
+        public static void model_CreateOKEvent(string name, string password)
+        {
+            if (debug != null)
+            {
+                debug.Line("Name: " + name);
+                debug.Line("Password: " + password);
+            }
+            entryForm.SetResponseText("'" + name + "' created successfully, please join now!");
+        }
+
+        public static void model_CreateFailEvent(string name, string message)
+        {
+            entryForm.SetResponseText("Unable to create'" + name + "'. " + message);
+        }
+
+        public static void model_JoinOKEvent(string name, string version, int length, string xml)
+        {
+            entryForm.SetResponseText("Joining '" + name + "'...");
+            SpreadsheetGUI sheet = new SpreadsheetGUI(name, version, xml);
+            sheets.Add(name, sheet);
+        }
+
+        public static void model_JoinFailEvent(string name, string message)
+        {
+            entryForm.SetResponseText("Unable to join '" + name + "'. " + message);
+        }
+
+        public static void model_ChangeOKEvent(string name, string version)
         {
             SpreadsheetApplicationContext appContext = SpreadsheetApplicationContext.getAppContext();
-            string[] Message = message.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None);
-            string name = "", cell = "", content = "";
-            string version = "";
-            int length = 0;
-            foreach (string s in Message)
-            {
-                if (s.Contains("Name:"))
-                    name = s.Substring(5);
-                if (s.Contains("Cell:"))
-                    cell = s.Substring(5);
-                if (s.Contains("Version:"))
-                    version = s.Substring(8);
-                if (s.Contains("Length:"))
-                    length = Int32.Parse(s.Substring(7));
-                content = Message[5];
-            }
 
-            sheets[name].updateContents(cell, content, version);
-            
+            sheets[name].SetContentsOkay(version);
         }
 
-        public static void model_UndoEndEvent(string message)
+        public static void model_ChangeFailEvent(string name, string message)
+        {
+            MessageBox.Show("Your change failed. " + message);
+        }
+
+        public static void model_ChangeWaitEvent(string name, string version)
+        {
+            MessageBox.Show("Waiting to be up to date to make your change...");
+            //do nothing?
+        }
+
+        public static void model_UndoOKEvent(string name, string version, string cell, int length, string content)
+        {
+            sheets[name].updateContents(cell, content, version);
+        }
+
+        public static void model_UndoEndEvent(string name, string version)
         {
             //let user know they are up to date
         }
 
-        public static void model_UndoWaitEvent(string message)
+        public static void model_UndoWaitEvent(string name, string version)
         {
             MessageBox.Show("Your version of the spreadsheet is out of date. Please wait!");
             //Let user know they are being updated.
         }
 
-        public static void model_UndoFailEvent(string message)
+        public static void model_UndoFailEvent(string name, string message)
         {
+            //Update response field on Spreadsheet window
             MessageBox.Show("Failure to Undo changes.");
         }
 
-        public static void model_UndoOKEvent(string message)
+        public static void model_UpdateEvent(string name, string version, string cell, int length, string content)
         {
-            SpreadsheetApplicationContext appContext = SpreadsheetApplicationContext.getAppContext();
-            string[] Message = message.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None);
-            string name = "", cell = "", content = "";
-            string version = "";
-            int length = 0;
-            foreach (string s in Message)
-            {
-                if (s.Contains("Name:"))
-                    name = s.Substring(5);
-                if (s.Contains("Cell:"))
-                    cell = s.Substring(5); 
-                if (s.Contains("Version:"))
-                    version = s.Substring(8);
-                if (s.Contains("Length:"))
-                    length = Int32.Parse(s.Substring(7));
-                content = Message[4];
-            }
-
-            //if (message.Contains("Name:"))
-            //{
-            //    name = message.Substring(message.IndexOf("Name:"));
-            //}
-
             sheets[name].updateContents(cell, content, version);
         }
 
-        public static void model_SaveFailEvent(string message)
+        public static void model_SaveOKEvent(string name)
         {
-            SpreadsheetApplicationContext appContext = SpreadsheetApplicationContext.getAppContext();
-            string[] Message = message.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None);
-            string reason = Message[2];
-            MessageBox.Show("The server was unable to save the session: " + reason);
-        }
-
-        public static void model_SaveOKEvent(string message)
-        {
-            //Update saved box on GUI
+            //Update response field on Spreadsheet window
             MessageBox.Show("Saved successfully.");
         }
 
-        public static void model_JoinFailEvent(string message)
+        public static void model_SaveFailEvent(string name, string message)
         {
-            SpreadsheetApplicationContext appContext = SpreadsheetApplicationContext.getAppContext();
-            ss_open_successful = true;
-            string[] Message = message.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None);
-            string reason = Message[2];
-            entryForm.SetResponseText("The server was unable to join you to the session: " + reason);
+            //Update response field on Spreadsheet window
+            MessageBox.Show("Unable to Save. " + message);
         }
-
-        public static void model_JoinOKEvent(string message)
-        {
-            SpreadsheetApplicationContext appContext = SpreadsheetApplicationContext.getAppContext();
-            ss_open_successful = true;
-            string[] Message = message.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None);
-            string name = "", password = "", xml = "";
-            string version = ""; 
-            int length = 0;
-            foreach (string s in Message)
-            {
-                if (s.Contains("Name:"))
-                    name = s.Substring(5);
-                if (s.Contains("Password:"))
-                    password = s.Substring(9);
-                if (s.Contains("Version:"))
-                    version = s.Substring(8);
-                if (s.Contains("Length:"))
-                    length = Int32.Parse(s.Substring(7));
-                xml = Message[4];
-            }
-            //if (message.Contains("Name:"))
-            //{
-            //    name = message.Substring(message.IndexOf("Name:"));
-            //}
-            entryForm.SetResponseText("Join Successful. Setting up Spreadsheet...");
-            SpreadsheetGUI sheet = new SpreadsheetGUI(name, password, version);
-            sheets.Add(name, sheet);
-            //the window is run from the GUI class when the ss is loaded
-            //appContext.RunForm(sheet);
-        }
-
-        public static void model_ChangeFailEvent(string message)
-        {
-            MessageBox.Show("Your change failed.");
-        }
-
-        public static void model_ChangeOKEvent(string message)
-        {
-            SpreadsheetApplicationContext appContext = SpreadsheetApplicationContext.getAppContext();
-            ss_open_successful = true;
-            string[] Message = message.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None);
-            string name = "", version = "";
-            foreach (string s in Message)
-            {
-                if (s.Contains("Name:"))
-                    name = s.Substring(5);
-                if (s.Contains("Version:"))
-                    version = s.Substring(8);
-            }
-
-            sheets[name].SetContentsOkay(version);
-
-        }
-
-        public static void model_ChangeWaitEvent(string message)
-        {
-            SpreadsheetApplicationContext appContext = SpreadsheetApplicationContext.getAppContext();
-            ss_open_successful = true;
-            string[] Message = message.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None);
-            string name = "", version = "";
-            foreach (string s in Message)
-            {
-                if (s.Contains("Name:"))
-                    name = s.Substring(5);
-                if (s.Contains("Version:"))
-                    version = s.Substring(8);
-            }
-
-            //do nothing?
-        }
-
-        public static void model_CreateFailEvent(string name, string message)
-        {
-            entryForm.SetResponseText("The server was unable to join the session: " + message);
-        }
-
-        public static void model_CreateOKEvent(string message)
-        {
-            debug.Line("Message: " + message);
-            entryForm.SetResponseText("Created successfully, please join now!");
-
-            SpreadsheetApplicationContext appContext = SpreadsheetApplicationContext.getAppContext();
-            ss_open_successful = true;
-            string[] Message = message.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None);
-            string name = "", password = "";
-            foreach (string s in Message)
-            {
-                if (s.Contains("Name:"))
-                    name = s.Substring(s.IndexOf("Name:")+5, 5);
-                if (s.Contains("Password:"))
-                    password = s.Substring(9);
-            }
-            debug.Line("Parsed Name: " + name);
-            debug.Line("Parsed Password: " + password);
-            //if (message.Contains("Name:"))
-            //{
-            //    name = message.Substring(message.IndexOf("Name:"));
-            //}
-            //SpreadsheetGUI sheet = new SpreadsheetGUI(name, password, 0);
-            //sheets.Add(name, sheet);
-            //appContext.RunForm(sheet);
-        }
-
     }
 
 }

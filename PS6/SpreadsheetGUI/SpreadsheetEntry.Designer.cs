@@ -30,8 +30,9 @@
         {
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.newConnectionMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.showDebugConsoleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.disconnectMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.spreadsheetNameTextBox = new System.Windows.Forms.TextBox();
             this.passwordTextBox = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
@@ -60,25 +61,33 @@
             // fileToolStripMenuItem
             // 
             this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.newConnectionMenuItem,
-            this.disconnectMenuItem});
+            this.showDebugConsoleToolStripMenuItem,
+            this.disconnectMenuItem,
+            this.exitToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
             this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
-            this.fileToolStripMenuItem.Text = "File";
+            this.fileToolStripMenuItem.Text = "&File";
             // 
-            // newConnectionMenuItem
+            // showDebugConsoleToolStripMenuItem
             // 
-            this.newConnectionMenuItem.Name = "newConnectionMenuItem";
-            this.newConnectionMenuItem.Size = new System.Drawing.Size(163, 22);
-            this.newConnectionMenuItem.Text = "New Connection";
-            this.newConnectionMenuItem.Click += new System.EventHandler(this.newConnectionMenuItem_Click);
+            this.showDebugConsoleToolStripMenuItem.Name = "showDebugConsoleToolStripMenuItem";
+            this.showDebugConsoleToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
+            this.showDebugConsoleToolStripMenuItem.Text = "Show De&bug Console";
+            this.showDebugConsoleToolStripMenuItem.Click += new System.EventHandler(this.showDebugConsoleToolStripMenuItem_Click);
             // 
             // disconnectMenuItem
             // 
             this.disconnectMenuItem.Name = "disconnectMenuItem";
-            this.disconnectMenuItem.Size = new System.Drawing.Size(163, 22);
-            this.disconnectMenuItem.Text = "Disconnect";
+            this.disconnectMenuItem.Size = new System.Drawing.Size(187, 22);
+            this.disconnectMenuItem.Text = "&Disconnect";
             this.disconnectMenuItem.Click += new System.EventHandler(this.disconnectMenuItem_Click);
+            // 
+            // exitToolStripMenuItem
+            // 
+            this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
+            this.exitToolStripMenuItem.Text = "E&xit";
+            this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
             // spreadsheetNameTextBox
             // 
@@ -118,7 +127,7 @@
             this.joinExistingButton.Name = "joinExistingButton";
             this.joinExistingButton.Size = new System.Drawing.Size(75, 25);
             this.joinExistingButton.TabIndex = 5;
-            this.joinExistingButton.Text = "Join Existing";
+            this.joinExistingButton.Text = "&Join";
             this.joinExistingButton.UseVisualStyleBackColor = true;
             this.joinExistingButton.Click += new System.EventHandler(this.joinExistingButton_Click);
             // 
@@ -128,7 +137,7 @@
             this.createNewButton.Name = "createNewButton";
             this.createNewButton.Size = new System.Drawing.Size(75, 25);
             this.createNewButton.TabIndex = 6;
-            this.createNewButton.Text = "Create New";
+            this.createNewButton.Text = "Create &New";
             this.createNewButton.UseVisualStyleBackColor = true;
             this.createNewButton.Click += new System.EventHandler(this.createNewButton_Click);
             // 
@@ -193,6 +202,7 @@
             this.Controls.Add(this.spreadsheetNameTextBox);
             this.Controls.Add(this.menuStrip1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.KeyPreview = true;
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "SpreadsheetEntry";
             this.Text = "SpreadheetEntry";
@@ -211,7 +221,6 @@
 
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem newConnectionMenuItem;
         private System.Windows.Forms.ToolStripMenuItem disconnectMenuItem;
         private System.Windows.Forms.TextBox spreadsheetNameTextBox;
         private System.Windows.Forms.TextBox passwordTextBox;
@@ -224,5 +233,7 @@
         private System.Windows.Forms.Label respLabel;
         private System.Windows.Forms.Label response;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
+        private System.Windows.Forms.ToolStripMenuItem showDebugConsoleToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
     }
 }

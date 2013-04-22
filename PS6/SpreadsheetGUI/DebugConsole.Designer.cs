@@ -36,22 +36,31 @@
             this.console.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.console.Font = new System.Drawing.Font("Courier New", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.console.BackColor = System.Drawing.SystemColors.InfoText;
+            this.console.Font = new System.Drawing.Font("Courier New", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.console.ForeColor = System.Drawing.SystemColors.Window;
             this.console.Location = new System.Drawing.Point(1, 1);
             this.console.Multiline = true;
             this.console.Name = "console";
+            this.console.ReadOnly = true;
             this.console.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.console.Size = new System.Drawing.Size(715, 262);
+            this.console.Size = new System.Drawing.Size(544, 231);
             this.console.TabIndex = 0;
+            this.console.UseWaitCursor = true;
             // 
             // DebugConsole
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(717, 264);
+            this.ClientSize = new System.Drawing.Size(546, 233);
             this.Controls.Add(this.console);
+            this.ForeColor = System.Drawing.SystemColors.Control;
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Name = "DebugConsole";
-            this.Text = "DebugConsole";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
+            this.Text = "Debug Console";
+            this.UseWaitCursor = true;
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.DebugConsole_FormClosing);
             this.ResumeLayout(false);
             this.PerformLayout();
 

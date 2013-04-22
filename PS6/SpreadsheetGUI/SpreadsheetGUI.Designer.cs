@@ -197,7 +197,7 @@
             // 
             this.menu_File_Exit.Name = "menu_File_Exit";
             this.menu_File_Exit.Size = new System.Drawing.Size(152, 22);
-            this.menu_File_Exit.Text = "Exit";
+            this.menu_File_Exit.Text = "Disconnect";
             this.menu_File_Exit.Click += new System.EventHandler(this.menu_File_Exit_Click);
             // 
             // editToolStripMenuItem
