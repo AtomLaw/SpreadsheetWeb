@@ -119,7 +119,7 @@ namespace SpreadsheetClient
             //entryForm = new SpreadsheetEntry("");
 
             appContext.RunForm(new ConnectToHostForm());
-            //appContext.RunForm(new SpreadsheetGUI("name", "0", ""));
+            appContext.RunForm(new SpreadsheetGUI("name", "0", "<xml></xml>"));
         }
 
         ///// <summary>
@@ -308,7 +308,7 @@ namespace SpreadsheetClient
         public static void model_ChangeOKEvent(string name, string version)
         {
             SpreadsheetApplicationContext appContext = SpreadsheetApplicationContext.getAppContext();
-
+            sheets[name].updateVersionLabel(version);
             sheets[name].SetContentsOkay(version);
         }
 
@@ -326,6 +326,7 @@ namespace SpreadsheetClient
         public static void model_UndoOKEvent(string name, string version, string cell, int length, string content)
         {
             sheets[name].updateContents(cell, content, version);
+            sheets[name].updateVersionLabel(version);
         }
 
         public static void model_UndoEndEvent(string name, string version)
@@ -348,6 +349,8 @@ namespace SpreadsheetClient
         public static void model_UpdateEvent(string name, string version, string cell, int length, string content)
         {
             sheets[name].updateContents(cell, content, version);
+            sheets[name].updateVersionLabel(version);
+
         }
 
         public static void model_SaveOKEvent(string name)

@@ -5,6 +5,6 @@
 \\vmware-host\Shared Folders\Documents\SharedRepos\SpreadsheetWeb\PS6\Spreadsheet\bin\Debug\SpreadsheetUtilities.dll
 \\vmware-host\Shared Folders\Documents\SharedRepos\SpreadsheetWeb\PS6\Spreadsheet\bin\Debug\Formula.xml
 \\vmware-host\Shared Folders\Documents\SharedRepos\SpreadsheetWeb\PS6\Spreadsheet\bin\Debug\SpreadsheetUtilities.xml
+\\vmware-host\Shared Folders\Documents\SharedRepos\SpreadsheetWeb\PS6\Spreadsheet\obj\Debug\Spreadsheet.csprojResolveAssemblyReference.cache
 \\vmware-host\Shared Folders\Documents\SharedRepos\SpreadsheetWeb\PS6\Spreadsheet\obj\Debug\Spreadsheet.dll
 \\vmware-host\Shared Folders\Documents\SharedRepos\SpreadsheetWeb\PS6\Spreadsheet\obj\Debug\Spreadsheet.pdb
-\\vmware-host\Shared Folders\Documents\SharedRepos\SpreadsheetWeb\PS6\Spreadsheet\obj\Debug\Spreadsheet.csprojResolveAssemblyReference.cache

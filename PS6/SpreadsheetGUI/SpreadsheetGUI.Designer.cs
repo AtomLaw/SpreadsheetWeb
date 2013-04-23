@@ -47,6 +47,8 @@
             this.showHelpDocumentationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ssp = new SS.SpreadsheetPanel();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
+            this.label1 = new System.Windows.Forms.Label();
+            this.versionLabel = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.container_Master)).BeginInit();
             this.container_Master.Panel1.SuspendLayout();
             this.container_Master.Panel2.SuspendLayout();
@@ -64,6 +66,8 @@
             // container_Master.Panel1
             // 
             this.container_Master.Panel1.BackColor = System.Drawing.SystemColors.GradientInactiveCaption;
+            this.container_Master.Panel1.Controls.Add(this.versionLabel);
+            this.container_Master.Panel1.Controls.Add(this.label1);
             this.container_Master.Panel1.Controls.Add(this.btn_SetContents);
             this.container_Master.Panel1.Controls.Add(this.label_Contents);
             this.container_Master.Panel1.Controls.Add(this.txtBox_Contents);
@@ -182,21 +186,21 @@
             // menu_File_New
             // 
             this.menu_File_New.Name = "menu_File_New";
-            this.menu_File_New.Size = new System.Drawing.Size(152, 22);
+            this.menu_File_New.Size = new System.Drawing.Size(140, 22);
             this.menu_File_New.Text = "New Session";
             this.menu_File_New.Click += new System.EventHandler(this.menu_File_New_Click);
             // 
             // menu_File_Save
             // 
             this.menu_File_Save.Name = "menu_File_Save";
-            this.menu_File_Save.Size = new System.Drawing.Size(152, 22);
+            this.menu_File_Save.Size = new System.Drawing.Size(140, 22);
             this.menu_File_Save.Text = "Save";
             this.menu_File_Save.Click += new System.EventHandler(this.menu_File_Save_Click);
             // 
             // menu_File_Exit
             // 
             this.menu_File_Exit.Name = "menu_File_Exit";
-            this.menu_File_Exit.Size = new System.Drawing.Size(152, 22);
+            this.menu_File_Exit.Size = new System.Drawing.Size(140, 22);
             this.menu_File_Exit.Text = "Disconnect";
             this.menu_File_Exit.Click += new System.EventHandler(this.menu_File_Exit_Click);
             // 
@@ -239,6 +243,23 @@
             this.ssp.Size = new System.Drawing.Size(1164, 608);
             this.ssp.TabIndex = 0;
             this.ssp.SelectionChanged += new SS.SelectionChangedHandler(this.spreadsheetPanel1_SelectionChanged);
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(1052, 11);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(45, 13);
+            this.label1.TabIndex = 8;
+            this.label1.Text = "Version:";
+            // 
+            // versionLabel
+            // 
+            this.versionLabel.AutoSize = true;
+            this.versionLabel.Location = new System.Drawing.Point(1096, 11);
+            this.versionLabel.Name = "versionLabel";
+            this.versionLabel.Size = new System.Drawing.Size(0, 13);
+            this.versionLabel.TabIndex = 9;
             // 
             // SpreadsheetGUI
             // 
@@ -283,6 +304,8 @@
         private System.Windows.Forms.ToolStripMenuItem showHelpDocumentationToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem editToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem undoToolStripMenuItem;
+        private System.Windows.Forms.Label versionLabel;
+        private System.Windows.Forms.Label label1;
     }
 }
 
