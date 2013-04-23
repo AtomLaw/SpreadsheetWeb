@@ -27,16 +27,18 @@ void session::leave(connection *conn)
 {
   std::vector<connection*>::iterator i;
   for(i = connections.begin(); i != connections.end();)
+  {
+    if((*i) == conn)
     {
-      if((*i) == conn)
-	{
-	  i = connections.erase(i);
-	}
-      else
-	{
-	  i++;
-	}
-    }
+     i = connections.erase(i);
+   }
+   else
+   {
+     i++;
+   }
+ }
+
+ std::cout << "Successfully reached end of session::leave" << std::endl;
 }
 
 
@@ -168,13 +170,19 @@ void session::handle_message(Message msg, connection *conn)
     case MESSAGE_LEAVE:
       this->leave(conn);
       delete conn;
+      std::cout << "Successfully reached end of MESSAGE_LEAVE switch. " << std::endl;
       return;
       break;
     default:
       break;
     }
+
+   std::cout << "Right before if (conn) " << std::endl; 
   if(conn)  
+  {
+    std::cout << "Inside if (conn)" << std::endl;
     conn->read_message(boost::bind(&session::handle_message, this, _1, _2));
+  }
 }
 
 

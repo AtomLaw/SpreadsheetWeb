@@ -210,6 +210,11 @@ namespace SpreadsheetClient
             debug.Activate();
         }
 
+        public static void RemoveSpreadsheetGUI(string name)
+        {
+            sheets.Remove(name);
+        }
+
 
         /// <summary>
         /// Creates the member client model and registers all the

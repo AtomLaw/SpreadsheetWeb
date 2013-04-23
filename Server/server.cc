@@ -86,9 +86,11 @@ void server::handle_message(Message msg, connection* conn)
 	      if(sessions.find(msg.join.name) != sessions.end())
 		{
 		  sessions[msg.join.name]->join(conn);
+		  std::cout << "Joining an existing session." << std::endl;
 		}
 	      else
 		{
+			std::cout << "Creating a new session." << std::endl;
 		  sessions[msg.join.name] = new session(new spreadsheet(msg.join.name));
 		  sessions[msg.join.name]->join(conn);
 		}

@@ -148,9 +148,10 @@ void connection::handle_read(const boost::system::error_code & error, std::size_
           sscanf(line_buffer[1].c_str(), "Name:%s", buffer);
           msg.leave.name = std::string(buffer);
 
-          std::cout << "LEAVE request executed." << std::endl;
+          
           //Clear the buffer
           line_buffer.clear();
+          std::cout << "LEAVE request executed." << std::endl;
         } else
         {
           read_message(func);
@@ -287,6 +288,8 @@ void connection::handle_read(const boost::system::error_code & error, std::size_
 
       
       func(msg ,this);
+
+      std::cout << "right after func(msg, this) at the bottom of handle_read" << std::endl;
       // boost::asio::async_write(*socket,
       //         boost::asio::buffer(line, size),
       //         boost::bind(&connection::handle_write, this,
@@ -294,10 +297,11 @@ void connection::handle_read(const boost::system::error_code & error, std::size_
 
 
     }
-    else
-    {
-      delete this;
-    }
+    // else
+    // {
+    //   std::cout << "else delete this" << std::endl;
+    //   delete this;
+    // }
 }
 
 void connection::handle_write(const boost::system::error_code& error)

@@ -102,14 +102,35 @@ namespace SpreadsheetClient
             //set the Cell Address Text Field according to the coordinates of the SpreadsheetPanel
             int col, row;
             ssp.GetSelection(out col, out row);
-            txtBox_Cell.Text = SetAddress(col, row);
+            if (txtBox_Cell.Disposing || txtBox_Cell.IsDisposed)
+                return;
+            else if (txtBox_Cell.InvokeRequired)
+                txtBox_Cell.Invoke(new Action(() => { txtBox_Cell.Text = SetAddress(col, row); }));
+            else
+                txtBox_Cell.Text = SetAddress(col, row);
 
             //Set the Value Text Field to display FormulaError if there's an error
-            if(ss.GetCellValue(txtBox_Cell.Text).GetType() == typeof(SpreadsheetUtilities.FormulaError))
-                txtBox_Value.Text = "Formula Error";
+            if (ss.GetCellValue(txtBox_Cell.Text).GetType() == typeof(SpreadsheetUtilities.FormulaError))
+            {
+                if (txtBox_Value.Disposing || txtBox_Value.IsDisposed)
+                    return;
+                else if (txtBox_Value.InvokeRequired)
+                    txtBox_Value.Invoke(new Action(() => { txtBox_Value.Text = "Formula Error"; }));
+                else
+                    txtBox_Value.Text = "Formula Error";
+            }
             //otherwise display the valid value of the cell    
             else
+            {
+                //Change this to match invokes from above
                 txtBox_Value.Text = ss.GetCellValue(txtBox_Cell.Text).ToString();
+                if (txtBox_Value.Disposing || txtBox_Value.IsDisposed)
+                    return;
+                else if (txtBox_Value.InvokeRequired)
+                    txtBox_Value.Invoke(new Action(() => { txtBox_Value.Text = ss.GetCellValue(txtBox_Cell.Text).ToString(); }));
+                else
+                    txtBox_Value.Text = ss.GetCellValue(txtBox_Cell.Text).ToString();
+            }
 
             //if the contents type is a formula, display it with an '=' appended
             if(ss.GetCellContents(txtBox_Cell.Text).GetType() == typeof(SpreadsheetUtilities.Formula))
@@ -298,6 +319,7 @@ namespace SpreadsheetClient
             }
 
             model.SendMessage("LEAVE\nName:"+this.name);
+            SpreadsheetClient.RemoveSpreadsheetGUI(this.name);
             //model.SendMessage("Password:"+password);
 
             //    DialogResult = MessageBox.Show("Save Changes? If you say no, Changes will be lost.", "Changes Have Been Made",

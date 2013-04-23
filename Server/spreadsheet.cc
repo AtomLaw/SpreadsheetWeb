@@ -42,7 +42,7 @@ bool spreadsheet::load()
   file >> file_password >> file_version;
 
   this->password = file_password;
-  //  this->version = file_version;
+   this->version = file_version;
 
   while(!file.eof())
     {
