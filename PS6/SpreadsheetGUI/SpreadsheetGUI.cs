@@ -53,6 +53,8 @@ namespace SpreadsheetClient
             //this.password = password;
             this.version = version;
             versionLabel.Text = version;
+
+            FillSpreadSheet(ssp, ss);
         }
 
 
@@ -502,6 +504,11 @@ namespace SpreadsheetClient
                 else
                     panel.SetValue(address[0], address[1] - 1, v.ToString());
             }
+        }
+
+        private void showDebugConsoleToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SpreadsheetClient.showDebug();
         }
 
        
