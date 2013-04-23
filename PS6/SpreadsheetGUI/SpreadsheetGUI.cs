@@ -43,8 +43,7 @@ namespace SpreadsheetClient
 
             //initialize the selection to cell A1
             ssp.SetSelection(0, 0);
-            //if the Enter key is struck, assume user means Set Cell Contents
-            AcceptButton = btn_SetContents;
+            //if the Enter key is struck, assume user means Set Cell 
             RefreshTextFields(ssp); //refresh the text fields at the top
 
             //this.UpToDate = true; //this file has not been saved before
@@ -206,7 +205,7 @@ namespace SpreadsheetClient
 
                 }
                 //Set the text fields
-                FillSpreadSheet(ssp, ss);
+                //FillSpreadSheet(ssp, ss);
             }
             catch (Exception x)
             {
@@ -228,11 +227,14 @@ namespace SpreadsheetClient
         /// </summary>
         public void undoLast()
         {
-            KeyValuePair<string, string> pair = changeRequests.Dequeue();
-            string cell = pair.Key;
-            string contents = "";
+            if (changeRequests.Count > 0)
+            {
+                KeyValuePair<string, string> pair = changeRequests.Dequeue();
+                string cell = pair.Key;
+                string contents = "";
 
-            updateContents(cell, contents, this.version);
+                updateContents(cell, contents, this.version);
+            }
         }
 
         /// <summary>
@@ -242,12 +244,14 @@ namespace SpreadsheetClient
         /// <param name="contents"></param>
         public void SetContentsOkay(string version)
         {
-            KeyValuePair<string, string> pair = changeRequests.Dequeue();
-            string cell = pair.Key;
-            string contents = pair.Value;
+            if (changeRequests.Count > 0)
+            {
+                KeyValuePair<string, string> pair = changeRequests.Dequeue();
+                string cell = pair.Key;
+                string contents = pair.Value;
 
-            updateContents(cell, contents, version);
-
+                updateContents(cell, contents, version);
+            }
             //IEnumerable<string> dependees = ss.SetContentsOfCell(cell, contents);
             //foreach (string s in dependees)
             //{
@@ -292,6 +296,9 @@ namespace SpreadsheetClient
                     ssp.SetValue(address[0], address[1] - 1, v.ToString());
             }
             //Set the text fields
+            if(changeRequests.Count > 0)
+                changeRequests.Dequeue();
+
             FillSpreadSheet(ssp, ss);
         }
 
@@ -520,6 +527,11 @@ namespace SpreadsheetClient
         private void showDebugConsoleToolStripMenuItem_Click(object sender, EventArgs e)
         {
             SpreadsheetClient.showDebug();
+        }
+
+        private void SpreadsheetGUI_KeyUp(object sender, KeyEventArgs e)
+        {
+            
         }
 
        

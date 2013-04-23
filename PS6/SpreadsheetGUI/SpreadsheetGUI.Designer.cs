@@ -40,16 +40,16 @@
             this.txtBox_Cell = new System.Windows.Forms.TextBox();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.menu_File = new System.Windows.Forms.ToolStripMenuItem();
-            this.menu_File_New = new System.Windows.Forms.ToolStripMenuItem();
             this.menu_File_Save = new System.Windows.Forms.ToolStripMenuItem();
+            this.menu_File_New = new System.Windows.Forms.ToolStripMenuItem();
             this.menu_File_Exit = new System.Windows.Forms.ToolStripMenuItem();
             this.editToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.undoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showHelpDocumentationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.showDebugConsoleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ssp = new SS.SpreadsheetPanel();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
-            this.showDebugConsoleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.container_Master)).BeginInit();
             this.container_Master.Panel1.SuspendLayout();
             this.container_Master.Panel2.SuspendLayout();
@@ -201,19 +201,19 @@
             this.menu_File.Size = new System.Drawing.Size(37, 20);
             this.menu_File.Text = "File";
             // 
-            // menu_File_New
-            // 
-            this.menu_File_New.Name = "menu_File_New";
-            this.menu_File_New.Size = new System.Drawing.Size(152, 22);
-            this.menu_File_New.Text = "New Session";
-            this.menu_File_New.Click += new System.EventHandler(this.menu_File_New_Click);
-            // 
             // menu_File_Save
             // 
             this.menu_File_Save.Name = "menu_File_Save";
             this.menu_File_Save.Size = new System.Drawing.Size(152, 22);
             this.menu_File_Save.Text = "Save";
             this.menu_File_Save.Click += new System.EventHandler(this.menu_File_Save_Click);
+            // 
+            // menu_File_New
+            // 
+            this.menu_File_New.Name = "menu_File_New";
+            this.menu_File_New.Size = new System.Drawing.Size(152, 22);
+            this.menu_File_New.Text = "New Session";
+            this.menu_File_New.Click += new System.EventHandler(this.menu_File_New_Click);
             // 
             // menu_File_Exit
             // 
@@ -253,6 +253,13 @@
             this.showHelpDocumentationToolStripMenuItem.Text = "Show Help Documentation";
             this.showHelpDocumentationToolStripMenuItem.Click += new System.EventHandler(this.showHelpDocumentationToolStripMenuItem_Click);
             // 
+            // showDebugConsoleToolStripMenuItem
+            // 
+            this.showDebugConsoleToolStripMenuItem.Name = "showDebugConsoleToolStripMenuItem";
+            this.showDebugConsoleToolStripMenuItem.Size = new System.Drawing.Size(217, 22);
+            this.showDebugConsoleToolStripMenuItem.Text = "Show Debug Console";
+            this.showDebugConsoleToolStripMenuItem.Click += new System.EventHandler(this.showDebugConsoleToolStripMenuItem_Click);
+            // 
             // ssp
             // 
             this.ssp.BackColor = System.Drawing.SystemColors.ActiveCaption;
@@ -262,13 +269,6 @@
             this.ssp.Size = new System.Drawing.Size(1164, 608);
             this.ssp.TabIndex = 0;
             this.ssp.SelectionChanged += new SS.SelectionChangedHandler(this.spreadsheetPanel1_SelectionChanged);
-            // 
-            // showDebugConsoleToolStripMenuItem
-            // 
-            this.showDebugConsoleToolStripMenuItem.Name = "showDebugConsoleToolStripMenuItem";
-            this.showDebugConsoleToolStripMenuItem.Size = new System.Drawing.Size(217, 22);
-            this.showDebugConsoleToolStripMenuItem.Text = "Show Debug Console";
-            this.showDebugConsoleToolStripMenuItem.Click += new System.EventHandler(this.showDebugConsoleToolStripMenuItem_Click);
             // 
             // SpreadsheetGUI
             // 
@@ -281,6 +281,7 @@
             this.Name = "SpreadsheetGUI";
             this.Text = "SimpleSheets";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
+            this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.SpreadsheetGUI_KeyUp);
             this.container_Master.Panel1.ResumeLayout(false);
             this.container_Master.Panel1.PerformLayout();
             this.container_Master.Panel2.ResumeLayout(false);
