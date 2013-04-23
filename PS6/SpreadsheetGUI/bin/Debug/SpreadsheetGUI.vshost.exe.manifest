@@ -54,14 +54,14 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="SpreadsheetGUI.exe" size="54784">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="SpreadsheetGUI.exe" size="55296">
       <assemblyIdentity name="SpreadsheetGUI" version="1.0.0.0" language="neutral" processorArchitecture="x86" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
-        <dsig:DigestValue>qBHUnd5dm0Pe5OH27lHg9+DTm0g=</dsig:DigestValue>
+        <dsig:DigestValue>3tnu5g86Hl6O0rdbO1BTcx/19P4=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>

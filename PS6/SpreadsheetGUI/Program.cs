@@ -249,11 +249,11 @@ namespace SpreadsheetClient
         }
 
         /// <summary>
-        /// 
+        /// When the server sends back ERROR message, report it
         /// </summary>
         static void model_ErrorEvent()
         {
-            throw new NotImplementedException();
+            MessageBox.Show("Unknown Error Occurred.");
         }
 
 
@@ -269,11 +269,11 @@ namespace SpreadsheetClient
 
 
         /// <summary>
-        /// 
+        /// If the messsage is null, 
         /// </summary>
         private static void model_NullMessage()
         {
-            MessageBox.Show("Your connection was lost");
+            MessageBox.Show("Your connection was lost... maybe.");
         }
 
         private static void model_CouldNotConnect(Exception e)
@@ -330,6 +330,7 @@ namespace SpreadsheetClient
         public static void model_ChangeWaitEvent(string name, string version)
         {
             MessageBox.Show("Waiting to be up to date to make your change...");
+            sheets[name].undoLast();
             //do nothing?
         }
 

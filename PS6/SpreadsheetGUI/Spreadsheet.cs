@@ -60,8 +60,6 @@ namespace SS
         // the DependencyGraph that handles the dependent relationships of the cells of the spreadsheet
         private DependencyGraph dg;
 
-        private Queue<string> changesQueue;
-
         private bool changed;
 
         /// <inheritdoc />
@@ -306,9 +304,11 @@ namespace SS
                 {
                     return (double)c.Value;
                 }
-                else
-                    return (double)GetCellValue(name);
+                //else
+                //return (double)GetCellValue(name);
             }
+            else
+                return 0;
 
             throw new ArgumentException();
 

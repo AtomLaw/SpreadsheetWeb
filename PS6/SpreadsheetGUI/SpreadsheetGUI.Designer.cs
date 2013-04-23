@@ -29,6 +29,8 @@
         private void InitializeComponent()
         {
             this.container_Master = new System.Windows.Forms.SplitContainer();
+            this.versionLabel = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
             this.btn_SetContents = new System.Windows.Forms.Button();
             this.label_Contents = new System.Windows.Forms.Label();
             this.txtBox_Contents = new System.Windows.Forms.TextBox();
@@ -47,8 +49,7 @@
             this.showHelpDocumentationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ssp = new SS.SpreadsheetPanel();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
-            this.label1 = new System.Windows.Forms.Label();
-            this.versionLabel = new System.Windows.Forms.Label();
+            this.showDebugConsoleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.container_Master)).BeginInit();
             this.container_Master.Panel1.SuspendLayout();
             this.container_Master.Panel2.SuspendLayout();
@@ -83,6 +84,23 @@
             this.container_Master.Size = new System.Drawing.Size(1164, 683);
             this.container_Master.SplitterDistance = 71;
             this.container_Master.TabIndex = 0;
+            // 
+            // versionLabel
+            // 
+            this.versionLabel.AutoSize = true;
+            this.versionLabel.Location = new System.Drawing.Point(1096, 11);
+            this.versionLabel.Name = "versionLabel";
+            this.versionLabel.Size = new System.Drawing.Size(0, 13);
+            this.versionLabel.TabIndex = 9;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(1052, 11);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(45, 13);
+            this.label1.TabIndex = 8;
+            this.label1.Text = "Version:";
             // 
             // btn_SetContents
             // 
@@ -175,8 +193,8 @@
             // 
             this.menu_File.BackColor = System.Drawing.SystemColors.GradientInactiveCaption;
             this.menu_File.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.menu_File_New,
             this.menu_File_Save,
+            this.menu_File_New,
             this.menu_File_Exit});
             this.menu_File.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
             this.menu_File.Name = "menu_File";
@@ -186,22 +204,22 @@
             // menu_File_New
             // 
             this.menu_File_New.Name = "menu_File_New";
-            this.menu_File_New.Size = new System.Drawing.Size(140, 22);
+            this.menu_File_New.Size = new System.Drawing.Size(152, 22);
             this.menu_File_New.Text = "New Session";
             this.menu_File_New.Click += new System.EventHandler(this.menu_File_New_Click);
             // 
             // menu_File_Save
             // 
             this.menu_File_Save.Name = "menu_File_Save";
-            this.menu_File_Save.Size = new System.Drawing.Size(140, 22);
+            this.menu_File_Save.Size = new System.Drawing.Size(152, 22);
             this.menu_File_Save.Text = "Save";
             this.menu_File_Save.Click += new System.EventHandler(this.menu_File_Save_Click);
             // 
             // menu_File_Exit
             // 
             this.menu_File_Exit.Name = "menu_File_Exit";
-            this.menu_File_Exit.Size = new System.Drawing.Size(140, 22);
-            this.menu_File_Exit.Text = "Disconnect";
+            this.menu_File_Exit.Size = new System.Drawing.Size(152, 22);
+            this.menu_File_Exit.Text = "Leave Session";
             this.menu_File_Exit.Click += new System.EventHandler(this.menu_File_Exit_Click);
             // 
             // editToolStripMenuItem
@@ -222,7 +240,8 @@
             // helpToolStripMenuItem
             // 
             this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.showHelpDocumentationToolStripMenuItem});
+            this.showHelpDocumentationToolStripMenuItem,
+            this.showDebugConsoleToolStripMenuItem});
             this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
             this.helpToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
             this.helpToolStripMenuItem.Text = "Help";
@@ -244,22 +263,12 @@
             this.ssp.TabIndex = 0;
             this.ssp.SelectionChanged += new SS.SelectionChangedHandler(this.spreadsheetPanel1_SelectionChanged);
             // 
-            // label1
+            // showDebugConsoleToolStripMenuItem
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(1052, 11);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(45, 13);
-            this.label1.TabIndex = 8;
-            this.label1.Text = "Version:";
-            // 
-            // versionLabel
-            // 
-            this.versionLabel.AutoSize = true;
-            this.versionLabel.Location = new System.Drawing.Point(1096, 11);
-            this.versionLabel.Name = "versionLabel";
-            this.versionLabel.Size = new System.Drawing.Size(0, 13);
-            this.versionLabel.TabIndex = 9;
+            this.showDebugConsoleToolStripMenuItem.Name = "showDebugConsoleToolStripMenuItem";
+            this.showDebugConsoleToolStripMenuItem.Size = new System.Drawing.Size(217, 22);
+            this.showDebugConsoleToolStripMenuItem.Text = "Show Debug Console";
+            this.showDebugConsoleToolStripMenuItem.Click += new System.EventHandler(this.showDebugConsoleToolStripMenuItem_Click);
             // 
             // SpreadsheetGUI
             // 
@@ -306,6 +315,7 @@
         private System.Windows.Forms.ToolStripMenuItem undoToolStripMenuItem;
         private System.Windows.Forms.Label versionLabel;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.ToolStripMenuItem showDebugConsoleToolStripMenuItem;
     }
 }
 
