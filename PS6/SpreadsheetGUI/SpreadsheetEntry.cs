@@ -63,6 +63,8 @@ namespace SpreadsheetClient
         {
             string ssName = spreadsheetNameTextBox.Text;
             string password = passwordTextBox.Text;
+            if (SpreadsheetClient.sheets.ContainsKey(ssName))
+                MessageBox.Show("You are already editing the sheet '" + ssName + "'.");
 
             if (password == null || password.Length < 1)
                 MessageBox.Show("The password entered was invalid");

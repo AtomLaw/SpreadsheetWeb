@@ -25,6 +25,7 @@ class spreadsheet
   std::string get_xml();
 
 
+  std::string get_filename();
  private:
   bool loaded;
   int version;

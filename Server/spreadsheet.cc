@@ -98,12 +98,19 @@ int spreadsheet::get_version()
 
 void spreadsheet::update_cell(std::string cell, std::string contents)
 {
-  if(cell != "" && contents != "")
+  if(cell != "")
     this->cell_map[cell] = contents;
 }
 std::string spreadsheet::get_cell_contents(std::string cell)
 {
-  return this->cell_map[cell];
+  if(cell_map.find(cell) != cell_map.end())
+    {
+      return this->cell_map[cell];
+    }
+  else
+    {
+      return "";
+    }
 }
 
 std::string spreadsheet::get_xml()
@@ -130,3 +137,7 @@ void spreadsheet::increment_version()
   this->version++;
 }
 
+std::string spreadsheet::get_filename()
+{
+  return this->filename;
+}

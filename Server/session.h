@@ -29,12 +29,14 @@ public:
   void join(connection *connection);
   void leave(connection *connection);
 
+  int get_num_of_connections();
   
-  int get_version();
+  spreadsheet* get_spreadsheet();
 
-private:
+  void handle_message(Message msg, connection *conn, bool error);
 
-  void handle_message(Message msg, connection *conn);
+ private:
+  bool is_connected(connection *conn);
 
   spreadsheet *ss;
   std::vector<connection *> connections;

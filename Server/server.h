@@ -36,7 +36,7 @@ private:
   void handle_accept(tcp::socket* socket,
 		     const boost::system::error_code& error);
 
-  void handle_message(Message msg, connection* conn);
+  void handle_message(Message msg, connection* conn, bool error);
 
   boost::asio::io_service& io_service_;
   tcp::acceptor acceptor;

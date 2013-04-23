@@ -96,7 +96,7 @@ namespace SpreadsheetClient
 
         private static bool ss_open_successful;
 
-        private static Dictionary<string, SpreadsheetGUI> sheets;
+        public static Dictionary<string, SpreadsheetGUI> sheets;
 
 
         /// <summary>
@@ -300,14 +300,19 @@ namespace SpreadsheetClient
 
         public static void model_JoinOKEvent(string name, string version, int length, string xml)
         {
-            entryForm.SetResponseText("Joining '" + name + "'...");
-            SpreadsheetGUI sheet = new SpreadsheetGUI(name, version, xml);
-            sheets.Add(name, sheet);
+            if (sheets.ContainsKey(name))
+                MessageBox.Show("You are already editing the sheet '" + name + "'.");
+            else
+            {
+                entryForm.SetResponseText("Joining '" + name + "'...");
+                SpreadsheetGUI sheet = new SpreadsheetGUI(name, version, xml);
+                sheets.Add(name, sheet);
 
-            SpreadsheetApplicationContext appContext = SpreadsheetApplicationContext.getAppContext();
-            //appContext.RunForm(new SpreadsheetGUI(name, version, xml));
-            entryForm.Invoke(new Action(() => { appContext.RunForm(sheet); }));
-            entryForm.Invoke(new Action(() => { entryForm.Close(); }));
+                SpreadsheetApplicationContext appContext = SpreadsheetApplicationContext.getAppContext();
+                //appContext.RunForm(new SpreadsheetGUI(name, version, xml));
+                entryForm.Invoke(new Action(() => { appContext.RunForm(sheet); }));
+                entryForm.Invoke(new Action(() => { entryForm.Close(); }));
+            }
         }
         
         public static void model_JoinFailEvent(string name, string message)
