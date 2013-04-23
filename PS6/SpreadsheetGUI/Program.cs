@@ -119,6 +119,7 @@ namespace SpreadsheetClient
             //entryForm = new SpreadsheetEntry("");
 
             appContext.RunForm(new ConnectToHostForm());
+            //appContext.RunForm(new SpreadsheetGUI("name", "0", ""));
         }
 
         ///// <summary>
@@ -293,8 +294,12 @@ namespace SpreadsheetClient
             entryForm.SetResponseText("Joining '" + name + "'...");
             SpreadsheetGUI sheet = new SpreadsheetGUI(name, version, xml);
             sheets.Add(name, sheet);
-        }
 
+            SpreadsheetApplicationContext appContext = SpreadsheetApplicationContext.getAppContext();
+            //appContext.RunForm(new SpreadsheetGUI(name, version, xml));
+            entryForm.Invoke(new Action(() => { appContext.RunForm(sheet); }));
+        }
+        
         public static void model_JoinFailEvent(string name, string message)
         {
             entryForm.SetResponseText("Unable to join '" + name + "'. " + message);

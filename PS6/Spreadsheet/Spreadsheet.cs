@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using SpreadsheetUtilities;
+using System.IO;
 using System.Text.RegularExpressions;
 using System.Xml;
 
@@ -114,7 +115,7 @@ namespace SS
 
             try
             {
-                using (XmlReader r = XmlReader.Create(filePath))
+                using (XmlReader r = XmlReader.Create(new StringReader(filePath)))
                 {
                     while (r.Read())
                     {
