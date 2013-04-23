@@ -94,6 +94,7 @@ void server::handle_message(Message msg, connection* conn)
 		  sessions[msg.join.name] = new session(new spreadsheet(msg.join.name));
 		  sessions[msg.join.name]->join(conn);
 		}
+
 	      ss.load();
 	      std::string xml = ss.get_xml();
 	      int length = xml.length();
@@ -101,6 +102,7 @@ void server::handle_message(Message msg, connection* conn)
 	      out << "JOIN OK\n"
 		  << "Name:" << msg.join.name << "\n"
 		  << "Version:" << ss.get_version() << "\n"
+		  // << "Version:" << sessions[msg.join.name]->get_version() << "\n"
 		  << "Length:" << length << "\n"
 		  << xml << "\n";
 	      conn->send_message(out.str()); 

@@ -185,4 +185,9 @@ void session::handle_message(Message msg, connection *conn)
   }
 }
 
+int session::get_version()
+{
+  return ss->get_version();
+}
+
 

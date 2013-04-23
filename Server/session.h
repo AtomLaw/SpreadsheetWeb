@@ -29,6 +29,9 @@ public:
   void join(connection *connection);
   void leave(connection *connection);
 
+  
+  int get_version();
+
 private:
 
   void handle_message(Message msg, connection *conn);

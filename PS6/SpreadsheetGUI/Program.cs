@@ -182,6 +182,10 @@ namespace SpreadsheetClient
         /// </summary>
         public static void FocusSpreadSheetEntry()
         {
+            string host = entryForm.host;
+            entryForm = new SpreadsheetEntry(host);
+            SpreadsheetApplicationContext appContext = SpreadsheetApplicationContext.getAppContext();
+            appContext.RunForm(entryForm);
             entryForm.Activate();
         }
 
@@ -303,6 +307,7 @@ namespace SpreadsheetClient
             SpreadsheetApplicationContext appContext = SpreadsheetApplicationContext.getAppContext();
             //appContext.RunForm(new SpreadsheetGUI(name, version, xml));
             entryForm.Invoke(new Action(() => { appContext.RunForm(sheet); }));
+            entryForm.Invoke(new Action(() => { entryForm.Close(); }));
         }
         
         public static void model_JoinFailEvent(string name, string message)

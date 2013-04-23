@@ -320,6 +320,7 @@ namespace SpreadsheetClient
 
             model.SendMessage("LEAVE\nName:"+this.name);
             SpreadsheetClient.RemoveSpreadsheetGUI(this.name);
+            SpreadsheetClient.FocusSpreadSheetEntry();
             //model.SendMessage("Password:"+password);
 
             //    DialogResult = MessageBox.Show("Save Changes? If you say no, Changes will be lost.", "Changes Have Been Made",

@@ -15,7 +15,7 @@ namespace SpreadsheetClient
         SpreadsheetClientModel model;
 
         //host name
-        string host;
+        public string host;
 
         /// <summary>
         /// 

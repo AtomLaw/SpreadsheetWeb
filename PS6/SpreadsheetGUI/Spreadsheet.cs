@@ -104,7 +104,6 @@ namespace SS
             //instantiate Spreadsheet fields
             spreadsheet = new Dictionary<string, Cell>();
             dg = new DependencyGraph();
-
           
 
             //if there is a version mismatch, throw exception
@@ -302,8 +301,14 @@ namespace SS
             Cell c; //Cell object to store the the fetched cell
 
             if (spreadsheet.TryGetValue(name, out c))
+            {
                 if (c.Value.GetType() == typeof(double))
-                    return (double) c.Value;
+                {
+                    return (double)c.Value;
+                }
+                else
+                    return (double)GetCellValue(name);
+            }
 
             throw new ArgumentException();
 
