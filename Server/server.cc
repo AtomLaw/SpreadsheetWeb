@@ -92,7 +92,7 @@ void server::handle_message(Message msg, connection* conn)
 		  sessions[msg.join.name] = new session(new spreadsheet(msg.join.name));
 		  sessions[msg.join.name]->join(conn);
 		}
-
+	      ss.load();
 	      std::string xml = ss.get_xml();
 	      int length = xml.length();
 	      std::ostringstream out;

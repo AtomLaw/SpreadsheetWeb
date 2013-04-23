@@ -1,4 +1,5 @@
 #include "spreadsheet.h"
+#include <sstream>
 #include <iostream>
 #include <fstream>
 
@@ -98,7 +99,8 @@ int spreadsheet::get_version()
 
 void spreadsheet::update_cell(std::string cell, std::string contents)
 {
-  this->cell_map[cell] = contents;
+  if(cell != "" && contents != "")
+    this->cell_map[cell] = contents;
 }
 std::string spreadsheet::get_cell_contents(std::string cell)
 {
@@ -107,7 +109,21 @@ std::string spreadsheet::get_cell_contents(std::string cell)
 
 std::string spreadsheet::get_xml()
 {
-  return "<xml>";
+  std::ostringstream out;
+  out << "<?xml version=\"1.0\" encoding=\"utf-8\"?>"
+      << "<spreadsheet version=\"" << get_version() << "\">";
+
+  std::map<std::string, std::string>::iterator i;
+  for(i = this->cell_map.begin(); i != this->cell_map.end(); ++i)
+    {
+      out << "<cell>"
+	  << "<name>" << (*i).first << "</name>"
+	  << "<contents>" << (*i).second << "</contents>"
+	  << "</cell>";
+    }
+  
+  out << "</spreadsheet>";
+  return out.str();
 }
 
 void spreadsheet::increment_version()
