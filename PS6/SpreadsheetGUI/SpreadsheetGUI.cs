@@ -38,8 +38,8 @@ namespace SpreadsheetClient
             model = SpreadsheetClient.model;
 
             //create a new spreadsheet, save the version as ps6
-            //ss = new Spreadsheet(xml, IsValid, Normalize, version); 
-            ss = new Spreadsheet(IsValid, Normalize, version);
+          //  ss = new Spreadsheet(xml, IsValid, Normalize, version); 
+            ss = new Spreadsheet(xml, IsValid, Normalize, version);
 
             //initialize the selection to cell A1
             ssp.SetSelection(0, 0);
@@ -52,6 +52,7 @@ namespace SpreadsheetClient
             this.name = name;
             //this.password = password;
             this.version = version;
+            versionLabel.Text = version;
         }
 
 
@@ -241,6 +242,16 @@ namespace SpreadsheetClient
             }
             //Set the text fields
             FillSpreadSheet(ssp, ss);
+        }
+
+        public void updateVersionLabel(string version)
+        {
+            if (versionLabel.Disposing || versionLabel.IsDisposed)
+                return;
+            else if (versionLabel.InvokeRequired)
+                versionLabel.Invoke(new Action(() => { versionLabel.Text = version; }));
+            else
+                versionLabel.Text = version;
         }
 
 

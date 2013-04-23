@@ -108,8 +108,8 @@ namespace SS
           
 
             //if there is a version mismatch, throw exception
-            //if (!version.Equals(GetSavedVersion(filePath)))
-            //    throw new SpreadsheetReadWriteException("The version of this saved file does not match the version requested.");
+            if (!version.Equals(GetSavedVersion(filePath)))
+                throw new SpreadsheetReadWriteException("The version of this saved file does not match the version requested.");
 
             string cellName = "", contents = "";
 
@@ -186,7 +186,7 @@ namespace SS
         {
             try
             {
-                using (XmlReader r = XmlReader.Create(filename))
+                using (XmlReader r = XmlReader.Create(new StringReader(filename)))
                 {
                     while (r.Read())
                     {

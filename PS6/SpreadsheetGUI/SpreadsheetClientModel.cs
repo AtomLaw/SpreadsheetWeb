@@ -302,7 +302,7 @@ namespace SpreadsheetClient
 				    name = buffer.Dequeue().Substring(5);
 				    version = buffer.Dequeue().Substring(8);
 				    length = Convert.ToInt32(buffer.Dequeue().Substring(7));
-				    xml = buffer.Dequeue().Substring(4);
+				    xml = buffer.Dequeue();
 
                     buffer.Clear();
                     JoinOKEvent(name, version, length, xml);
@@ -318,7 +318,7 @@ namespace SpreadsheetClient
 					version = buffer.Dequeue().Substring(8);
 					cell = buffer.Dequeue().Substring(5);
 					length = Convert.ToInt32(buffer.Dequeue().Substring(7));
-					content = buffer.Dequeue().Substring(8);
+					content = buffer.Dequeue();
 
                     buffer.Clear();
                     UndoOKEvent(name, version, cell, length, content);
@@ -330,7 +330,7 @@ namespace SpreadsheetClient
 					version = buffer.Dequeue().Substring(8);
 					cell = buffer.Dequeue().Substring(5);
 					length = Convert.ToInt32(buffer.Dequeue().Substring(7));
-					content = buffer.Dequeue().Substring(8);
+					content = buffer.Dequeue();
 
                     buffer.Clear();
                     UpdateEvent(name, version, cell, length, content);
