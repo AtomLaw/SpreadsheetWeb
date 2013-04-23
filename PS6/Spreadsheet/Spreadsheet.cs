@@ -299,9 +299,12 @@ namespace SS
             Cell c; //Cell object to store the the fetched cell
 
             if (spreadsheet.TryGetValue(name, out c))
+            {
                 if (c.Value.GetType() == typeof(double))
-                    return (double) c.Value;
-
+                    return (double)c.Value;
+            }
+            else
+            { return 0; }
             throw new ArgumentException();
 
         }
