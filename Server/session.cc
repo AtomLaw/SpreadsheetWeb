@@ -50,6 +50,17 @@ void session::handle_message(Message msg, connection *conn, bool error)
     case MESSAGE_JOIN:
       break;
     case MESSAGE_CHANGE:
+      if(!this->is_connected(conn))
+	{
+	   std::ostringstream out;
+	   out << "CHANGE FAIL\n"
+	       << "Name:" << msg.change.name << "\n"
+	       << "User is not part of this session" << "\n";
+	   conn->send_message(out.str());
+	       
+	}
+      
+      
       if(ss->get_version() == msg.change.version)
       {
        //Add message to the undo stack
@@ -95,6 +106,15 @@ void session::handle_message(Message msg, connection *conn, bool error)
 
       break;
     case MESSAGE_UNDO:
+      if(!this->is_connected(conn))
+	{
+	   std::ostringstream out;
+	   out << "UNDO FAIL\n"
+	       << "Name:" << msg.change.name << "\n"
+	       << "User is not part of this session" << "\n";
+	   conn->send_message(out.str());
+	       
+	}
 
       std::cout << "Processing UNDO message..." << std::endl;
     //If there are no unsaved changes
@@ -160,6 +180,16 @@ void session::handle_message(Message msg, connection *conn, bool error)
 
       case MESSAGE_SAVE:
       {
+      if(!this->is_connected(conn))
+	{
+	   std::ostringstream out;
+	   out << "SAVE FAIL\n"
+	       << "Name:" << msg.change.name << "\n"
+	       << "User is not part of this session" << "\n";
+	   conn->send_message(out.str());
+	       
+	}
+
         this->ss->save();
         std::ostringstream out;
         out << "SAVE OK\n"
@@ -183,7 +213,16 @@ spreadsheet* session::get_spreadsheet()
 {
   return ss;
 }
-
+bool session::is_connected(connection *conn)
+{
+  std::vector<connection*>::iterator i;
+  for(i = connections.begin(); i != connections.end(); i++)
+    {
+      if(conn == (*i))
+	return true;
+    }
+  return false;
+}
 
 int session::get_num_of_connections()
 {
