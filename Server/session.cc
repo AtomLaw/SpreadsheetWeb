@@ -19,7 +19,6 @@ void session::join(connection *connection)
   std::cout << "User joined Session" << std::endl;
 
   
-  connection->read_message(boost::bind(&session::handle_message, this, _1, _2));
   connections.push_back(connection);
 }
 
@@ -50,9 +49,15 @@ void session::handle_message(Message msg, connection *conn)
       break;
     case MESSAGE_JOIN:
       break;
-      case MESSAGE_CHANGE:
+    case MESSAGE_CHANGE:
       if(ss->get_version() == msg.change.version)
       {
+       //Add message to the undo stack
+       undo_oper operation;
+       operation.cell = msg.change.cell;
+       operation.contents = ss->get_cell_contents(msg.change.cell);
+       undo_stack.push_back(operation);
+
        ss->update_cell(msg.change.cell, msg.change.content);
        ss->increment_version();
 
@@ -78,11 +83,6 @@ void session::handle_message(Message msg, connection *conn)
        << "Version:" << ss->get_version() << "\n";
        conn->send_message(out_response.str());
 
-       //Add message to the undo stack
-       undo_oper operation;
-       operation.cell = msg.change.cell;
-       operation.contents = msg.change.content;
-       undo_stack.push_back(operation);
      }
      else
      {
@@ -96,9 +96,11 @@ void session::handle_message(Message msg, connection *conn)
       break;
     case MESSAGE_UNDO:
 
+      std::cout << "Processing UNDO message..." << std::endl;
     //If there are no unsaved changes
     if (undo_stack.size() == 0)
     {
+      std::cout << "...No changes to undo!" << std::endl;
       std::ostringstream out;
       out << "UNDO END\n"
       << "Name:" << msg.undo.name << "\n"
@@ -107,7 +109,7 @@ void session::handle_message(Message msg, connection *conn)
     } 
     else if (ss->get_version() == msg.undo.version)
     {
-
+      std::cout << "...Undoing last change" << std::endl;
       //Get the last change to the spreadsheet
       undo_oper operation_to_undo = undo_stack.back();
       undo_stack.pop_back();
@@ -146,6 +148,7 @@ void session::handle_message(Message msg, connection *conn)
     }
     else //Client code is out of date
     {
+      std::cout << "...Version Mismatch" << std::endl;
       std::ostringstream out;
       out << "UNDO WAIT\n"
       << "Name:" << msg.undo.name << "\n"
@@ -169,25 +172,20 @@ void session::handle_message(Message msg, connection *conn)
       break;
     case MESSAGE_LEAVE:
       this->leave(conn);
-      delete conn;
-      std::cout << "Successfully reached end of MESSAGE_LEAVE switch. " << std::endl;
-      return;
       break;
     default:
       break;
     }
 
-   std::cout << "Right before if (conn) " << std::endl; 
-  if(conn)  
-  {
-    std::cout << "Inside if (conn)" << std::endl;
-    conn->read_message(boost::bind(&session::handle_message, this, _1, _2));
-  }
 }
 
-int session::get_version()
+spreadsheet* session::get_spreadsheet()
 {
-  return ss->get_version();
+  return ss;
 }
 
 
+int session::get_num_of_connections()
+{
+  return connections.size();
+}

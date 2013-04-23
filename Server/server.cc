@@ -95,19 +95,17 @@ void server::handle_message(Message msg, connection* conn)
 		  sessions[msg.join.name]->join(conn);
 		}
 
-	      ss.load();
-	      std::string xml = ss.get_xml();
+	      std::string xml = sessions[msg.join.name]->get_spreadsheet()->get_xml();
 	      int length = xml.length();
 	      std::ostringstream out;
 	      out << "JOIN OK\n"
 		  << "Name:" << msg.join.name << "\n"
-		  << "Version:" << ss.get_version() << "\n"
+		  << "Version:" << sessions[msg.join.name]->get_spreadsheet()->get_version() << "\n"
 		  // << "Version:" << sessions[msg.join.name]->get_version() << "\n"
 		  << "Length:" << length << "\n"
 		  << xml << "\n";
 	      conn->send_message(out.str()); 
-	      return;
-	    }
+	      }
 	  else
 	    {
 	      std::ostringstream out;
@@ -127,6 +125,25 @@ void server::handle_message(Message msg, connection* conn)
 	}
     }  
     std::cout << "Received join request" << std::endl;
+    break;
+
+  case MESSAGE_CHANGE:
+    sessions[msg.change.name]->handle_message(msg, conn);
+    break;
+  case MESSAGE_SAVE:
+    sessions[msg.save.name]->handle_message(msg, conn);
+    break;
+  case MESSAGE_UNDO:
+    sessions[msg.undo.name]->handle_message(msg, conn);
+    break;
+  case MESSAGE_LEAVE:
+    sessions[msg.leave.name]->handle_message(msg, conn);
+  if(sessions[msg.leave.name]->get_num_of_connections() == 0)
+    {
+      session* s = sessions[msg.leave.name];
+      sessions.erase(msg.leave.name);
+      delete s;
+    }
     break;
   default:
     std::cout << "ERROR" << std::endl;
