@@ -33,7 +33,7 @@ public:
   
   spreadsheet* get_spreadsheet();
 
-  void handle_message(Message msg, connection *conn);
+  void handle_message(Message msg, connection *conn, bool error);
 
  private:
   bool is_connected(connection *conn);

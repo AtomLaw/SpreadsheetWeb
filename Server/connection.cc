@@ -90,7 +90,7 @@ void connection::send_message(std::string message)
 
 // void handle_read(const boost::system::error_code& error,
 //     size_t bytes_transferred)
-void connection::handle_read(const boost::system::error_code & error, std::size_t size, boost::function<void(Message, connection*)> func)
+void connection::handle_read(const boost::system::error_code & error, std::size_t size, boost::function<void(Message, connection*, bool)> func)
 {
   if (!error)
     {
@@ -287,7 +287,7 @@ void connection::handle_read(const boost::system::error_code & error, std::size_
       }
 
       
-      func(msg ,this);
+      func(msg ,this, false);
 
       std::cout << "right after func(msg, this) at the bottom of handle_read" << std::endl;
       // boost::asio::async_write(*socket,
@@ -297,11 +297,13 @@ void connection::handle_read(const boost::system::error_code & error, std::size_
 
 
     }
-    // else
-    // {
-    //   std::cout << "else delete this" << std::endl;
-    //   delete this;
-    // }
+     else
+     {
+       std::cout << "Connection Forcably disconnected!" << std::endl;
+       Message msg;
+       msg.type = MESSAGE_ERROR;
+       func(msg, this, true);
+     }
 }
 
 void connection::handle_write(const boost::system::error_code& error)
@@ -329,7 +331,7 @@ void connection::handle_write(const boost::system::error_code& error)
     }
 }
 
-void connection::read_message(boost::function<void(Message, connection*)> func)
+void connection::read_message(boost::function<void(Message, connection*, bool)> func)
 {
       boost::asio::async_read_until(*socket, buffer, '\n',
 				    boost::bind(&connection::handle_read, this,

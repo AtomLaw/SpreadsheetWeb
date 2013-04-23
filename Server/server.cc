@@ -36,7 +36,7 @@ void server::handle_accept(tcp::socket *socket,
     {
       connection *nc = new connection(socket);
       nc->read_message(boost::bind(&server::handle_message, this,
-				   _1, _2));
+				   _1, _2, _3));
     }
   else
     {
@@ -46,8 +46,10 @@ void server::handle_accept(tcp::socket *socket,
   start_accept();
 }
 
-void server::handle_message(Message msg, connection* conn)
+void server::handle_message(Message msg, connection* conn, bool error)
 {
+
+  
   switch(msg.type){
   case MESSAGE_CREATE:
     {    std::cout << "Received Create Message" << std::endl;
@@ -71,7 +73,7 @@ void server::handle_message(Message msg, connection* conn)
 	conn->send_message(out.str());
       }	
     conn->read_message(boost::bind(&server::handle_message, this,
-				 _1, _2));
+				   _1, _2, _3));
     }
     break;
 
@@ -128,16 +130,16 @@ void server::handle_message(Message msg, connection* conn)
     break;
 
   case MESSAGE_CHANGE:
-    sessions[msg.change.name]->handle_message(msg, conn);
+    sessions[msg.change.name]->handle_message(msg, conn, error);
     break;
   case MESSAGE_SAVE:
-    sessions[msg.save.name]->handle_message(msg, conn);
+    sessions[msg.save.name]->handle_message(msg, conn, error);
     break;
   case MESSAGE_UNDO:
-    sessions[msg.undo.name]->handle_message(msg, conn);
+    sessions[msg.undo.name]->handle_message(msg, conn, error);
     break;
   case MESSAGE_LEAVE:
-    sessions[msg.leave.name]->handle_message(msg, conn);
+    sessions[msg.leave.name]->handle_message(msg, conn, error);
   if(sessions[msg.leave.name]->get_num_of_connections() == 0)
     {
       session* s = sessions[msg.leave.name];
@@ -145,11 +147,34 @@ void server::handle_message(Message msg, connection* conn)
       delete s;
     }
     break;
+  case MESSAGE_ERROR:
+      if(error)
+    {
+      std::map<std::string, session*>::iterator i;
+      for(i = sessions.begin(); i != sessions.end(); i++){
+
+	Message leave_msg;
+	leave_msg.type = MESSAGE_LEAVE;
+	leave_msg.leave.name = (*i).first;
+
+	sessions[leave_msg.leave.name]->handle_message(leave_msg, conn, error);
+	if(sessions[leave_msg.leave.name]->get_num_of_connections() == 0)
+	  {
+	    session* s = sessions[leave_msg.leave.name];
+	    sessions.erase(leave_msg.leave.name);
+      	  }
+
+
+	//	handle_message(leave_msg, conn, false);
+      }
+      return;
+    }
+
   default:
     std::cout << "ERROR" << std::endl;
     
   }
   conn->read_message(boost::bind(&server::handle_message, this,
-				 _1, _2));
+				 _1, _2, _3));
 
 }

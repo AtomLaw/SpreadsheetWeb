@@ -41,7 +41,7 @@ void session::leave(connection *conn)
 }
 
 
-void session::handle_message(Message msg, connection *conn)
+void session::handle_message(Message msg, connection *conn, bool error)
 {
   switch(msg.type)
     {

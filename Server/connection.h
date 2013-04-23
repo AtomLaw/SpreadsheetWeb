@@ -19,7 +19,8 @@ enum MESSAGE_TYPE
     MESSAGE_CHANGE,
     MESSAGE_UNDO,
     MESSAGE_SAVE,
-    MESSAGE_LEAVE
+    MESSAGE_LEAVE,
+    MESSAGE_ERROR
   };
 
 struct Message
@@ -89,14 +90,14 @@ public:
 
   Message process_string();
 
-  void read_message(boost::function<void(Message, connection*)> func);
+  void read_message(boost::function<void(Message, connection*, bool)> func);
 
   void send_message(std::string message);
 
 private:
   // void handle_read(const boost::system::error_code& error,
   //     size_t bytes_transferred)
-  void handle_read(const boost::system::error_code & error, std::size_t size, boost::function<void(Message, connection*)> func);
+  void handle_read(const boost::system::error_code & error, std::size_t size, boost::function<void(Message, connection*, bool)> func);
 
   void handle_write(const boost::system::error_code& error);
 

@@ -137,3 +137,7 @@ void spreadsheet::increment_version()
   this->version++;
 }
 
+std::string spreadsheet::get_filename()
+{
+  return this->filename;
+}
