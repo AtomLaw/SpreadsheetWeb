@@ -125,7 +125,6 @@ namespace SpreadsheetClient
             else
             {
                 //Change this to match invokes from above
-                txtBox_Value.Text = ss.GetCellValue(txtBox_Cell.Text).ToString();
                 if (txtBox_Value.Disposing || txtBox_Value.IsDisposed)
                     return;
                 else if (txtBox_Value.InvokeRequired)
@@ -220,8 +219,20 @@ namespace SpreadsheetClient
                 else
                     throw x;
             }
+        }
 
-           
+
+        /// <summary>
+        /// If the server says changes shouldn't have been made,
+        /// undo the last changes
+        /// </summary>
+        public void undoLast()
+        {
+            KeyValuePair<string, string> pair = changeRequests.Dequeue();
+            string cell = pair.Key;
+            string contents = "";
+
+            updateContents(cell, contents, this.version);
         }
 
         /// <summary>
@@ -234,7 +245,6 @@ namespace SpreadsheetClient
             KeyValuePair<string, string> pair = changeRequests.Dequeue();
             string cell = pair.Key;
             string contents = pair.Value;
-            int[] address = GetCoordinates(cell);
 
             updateContents(cell, contents, version);
 
@@ -305,7 +315,8 @@ namespace SpreadsheetClient
         private void menu_File_New_Click(object sender, EventArgs e)
         {
             //SpreadsheetApplicationContext.getAppContext().RunForm(new ConnectToHostForm());
-            SpreadsheetClient.FocusSpreadSheetEntry();
+            //SpreadsheetClient.FocusSpreadSheetEntry();
+            new SpreadsheetClient();
         }
 
         /// <summary>

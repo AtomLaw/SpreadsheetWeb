@@ -12,6 +12,7 @@ namespace SpreadsheetClient
 	{
 		//socket used to communicate with the server
 		private StringSocket socket;
+        private string hostName;
 
 		private Queue<string> buffer;
 
@@ -104,6 +105,7 @@ namespace SpreadsheetClient
 		/// <param name="playerName"></param>
 		public void ConnectToServer(string hostName)
 		{
+            this.hostName = hostName;
 			//Try to connect with the given server and the default port.
 			try
 			{
@@ -179,7 +181,9 @@ namespace SpreadsheetClient
                     //close the connection
                     buffer.Clear();
                     this.CloseConnection();
-                    NullMessageReceivedEvent();
+                    ConnectToServer(hostName);
+                    return;
+                    //NullMessageReceivedEvent();
                 }
                 else if (msg.StartsWith("ERROR"))
                 {
@@ -241,7 +245,7 @@ namespace SpreadsheetClient
 				else if (msg.StartsWith("CHANGE WAIT"))
 				{
 				    buffer.Dequeue();
-				    name = buffer.Dequeue();
+				    name = buffer.Dequeue().Substring(5);
                     version = buffer.Dequeue().Substring(8);
 
                     buffer.Clear();
