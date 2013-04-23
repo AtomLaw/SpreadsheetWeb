@@ -54,26 +54,14 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="Spreadsheet.dll" size="13824">
-      <assemblyIdentity name="Spreadsheet" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
-      <hash>
-        <dsig:Transforms>
-          <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
-        </dsig:Transforms>
-        <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
-        <dsig:DigestValue>Jc2aXhZhUIC7zess8GQw43hEQm8=</dsig:DigestValue>
-      </hash>
-    </dependentAssembly>
-  </dependency>
-  <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="SpreadsheetGUI.exe" size="44544">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="SpreadsheetGUI.exe" size="53760">
       <assemblyIdentity name="SpreadsheetGUI" version="1.0.0.0" language="neutral" processorArchitecture="x86" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
-        <dsig:DigestValue>v8q0adRt8ruVMmBzcXP2aUYMeXc=</dsig:DigestValue>
+        <dsig:DigestValue>36fEU3IocYBzAdZcKkA8y+5fnws=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>

@@ -119,7 +119,7 @@ namespace SpreadsheetClient
             //entryForm = new SpreadsheetEntry("");
 
             appContext.RunForm(new ConnectToHostForm());
-            appContext.RunForm(new SpreadsheetGUI("name", "0", "<xml></xml>"));
+            //appContext.RunForm(new SpreadsheetGUI("name", "0", "<xml></xml>"));
         }
 
         ///// <summary>

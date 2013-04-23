@@ -66,10 +66,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Spreadsheet\bin\Debug\Formula.dll</HintPath>
     </Reference>
-    <Reference Include="Spreadsheet, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\Visual Studio 2012\Projects\PS6\Spreadsheet.dll</HintPath>
-    </Reference>
     <Reference Include="SpreadsheetPanel">
       <HintPath>..\SpreadsheetPanel.dll</HintPath>
     </Reference>
@@ -91,6 +87,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AbstractSpreadsheet.cs" />
     <Compile Include="ConnectToHostForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -103,6 +100,7 @@
     <Compile Include="DebugConsole.Designer.cs">
       <DependentUpon>DebugConsole.cs</DependentUpon>
     </Compile>
+    <Compile Include="Spreadsheet.cs" />
     <Compile Include="SpreadsheetEntry.cs">
       <SubType>Form</SubType>
     </Compile>

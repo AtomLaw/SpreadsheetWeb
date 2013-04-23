@@ -95,7 +95,7 @@ namespace SS
         /// 
         /// </summary>
         /// <param name="filePath"></param>
-        /// <param name="isValid"></param>d
+        /// <param name="isValid"></param>
         /// <param name="normalize"></param>
         /// <param name="version"></param>
         public Spreadsheet(string filePath, Func<string, bool> isValid, Func<string, string> normalize, string version)
@@ -112,55 +112,57 @@ namespace SS
                 throw new SpreadsheetReadWriteException("The version of this saved file does not match the version requested.");
 
             string cellName = "", contents = "";
-
-            try
+            if (filePath.Length > 6)
             {
-                using (XmlReader r = XmlReader.Create(new StringReader(filePath)))
+                try
                 {
-                    while (r.Read())
+                    using (XmlReader r = XmlReader.Create(new StringReader(filePath)))
                     {
-                        if (r.IsStartElement())
+                        while (r.Read())
                         {
-                            switch (r.Name)
+                            if (r.IsStartElement())
                             {
-                                case "spreadsheet version":
-                                    break;
+                                switch (r.Name)
+                                {
+                                    case "spreadsheet version":
+                                        break;
 
-                                case "cell":
-                                    break;
+                                    case "cell":
+                                        break;
 
-                                case "name":
-                                    r.Read();
-                                    if (!IsValidCellName(r.Value))
-                                        throw new SpreadsheetReadWriteException("An invalid cell name was found in the file.");
-                                    if (!r.Value.Equals(cellName))
-                                        cellName = r.Value;
-                                    else
-                                        cellName = "";
-                                    break;
+                                    case "name":
+                                        r.Read();
+                                        if (!IsValidCellName(r.Value))
+                                            throw new SpreadsheetReadWriteException("An invalid cell name was found in the file.");
+                                        if (!r.Value.Equals(cellName))
+                                            cellName = r.Value;
+                                        else
+                                            cellName = "";
+                                        break;
 
-                                case "contents":
-                                    r.Read();
-                                    contents = r.Value;
-                                    if (cellName.Length != 0)
-                                        SetContentsOfCell(Normalize(cellName), contents);
-                                    break;
+                                    case "contents":
+                                        r.Read();
+                                        contents = r.Value;
+                                        if (cellName.Length != 0)
+                                            SetContentsOfCell(Normalize(cellName), contents);
+                                        break;
+                                }
+
                             }
-                            
                         }
                     }
                 }
-            }
-            catch (Exception e)
-            {
-                if (e is CircularException)
-                    throw new SpreadsheetReadWriteException("Circular dependencies were found in the file.");
-                else if (e is FormulaFormatException)
-                    throw new SpreadsheetReadWriteException("An invalid Formula was found in the file.");
-                else if (e is SpreadsheetReadWriteException)
-                    throw e;
-                else
-                    throw new SpreadsheetReadWriteException("An unknown error occurred reading the file.");
+                catch (Exception e)
+                {
+                    if (e is CircularException)
+                        throw new SpreadsheetReadWriteException("Circular dependencies were found in the file.");
+                    else if (e is FormulaFormatException)
+                        throw new SpreadsheetReadWriteException("An invalid Formula was found in the file.");
+                    else if (e is SpreadsheetReadWriteException)
+                        throw e;
+                    else
+                        throw new SpreadsheetReadWriteException("An unknown error occurred reading the file.");
+                }
             }
 
             //treat the file as new
@@ -202,7 +204,8 @@ namespace SS
                 if(e is System.IO.FileNotFoundException)
                     throw new SpreadsheetReadWriteException("No such filename was found.");
             }
-            throw new SpreadsheetReadWriteException("Unkown error occurred.");
+            //throw new SpreadsheetReadWriteException("Unkown error occurred.");
+            return "0";
         }
 
         //Still Needs Exceptions

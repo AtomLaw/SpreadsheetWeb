@@ -135,6 +135,8 @@ void connection::handle_read(const boost::system::error_code & error, std::size_
           sscanf(line_buffer[1].c_str(), "Name:%s", buffer);
           msg.save.name = std::string(buffer);
 
+          std::cout << "SAVE request executed." << std::endl;
+
           //Clear the buffer
           line_buffer.clear();
         } else if (message == "LEAVE")
@@ -146,6 +148,7 @@ void connection::handle_read(const boost::system::error_code & error, std::size_
           sscanf(line_buffer[1].c_str(), "Name:%s", buffer);
           msg.leave.name = std::string(buffer);
 
+          std::cout << "LEAVE request executed." << std::endl;
           //Clear the buffer
           line_buffer.clear();
         } else
@@ -176,6 +179,9 @@ void connection::handle_read(const boost::system::error_code & error, std::size_
           sscanf(line_buffer[2].c_str(), "Password:%s", buff2);
           msg.create.password = std::string(buff2);
 
+
+          std::cout << "CREATE request executed." << std::endl;
+
           line_buffer.clear();
 
 
@@ -194,6 +200,8 @@ void connection::handle_read(const boost::system::error_code & error, std::size_
           sscanf(line_buffer[2].c_str(), "Password:%s", buff2);
           msg.join.password = std::string(buff2);
 
+          std::cout << "SAVE request executed." << std::endl;
+
           line_buffer.clear();
         } 
         else if (message == "UNDO")
@@ -207,6 +215,8 @@ void connection::handle_read(const boost::system::error_code & error, std::size_
           int version;
           sscanf(line_buffer[2].c_str(), "Version:%i", &version);
           msg.undo.version = version;
+
+          std::cout << "UNDO request executed." << std::endl;
 
           line_buffer.clear();
         } 
@@ -248,6 +258,7 @@ void connection::handle_read(const boost::system::error_code & error, std::size_
           std::string contents = line_buffer[5].substr(0, length);
           msg.change.content = contents;
 
+          std::cout << "CHANGE request executed." << std::endl;
 
           line_buffer.clear();
 

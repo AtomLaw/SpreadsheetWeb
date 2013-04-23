@@ -119,7 +119,12 @@ namespace SpreadsheetClient
                 txtBox_Contents.Text = ss.GetCellContents(txtBox_Cell.Text).ToString();
 
             //place the focus back on the contents text field
-            txtBox_Contents.Focus();
+            if (txtBox_Contents.Disposing || txtBox_Contents.IsDisposed)
+                return;
+            else if (txtBox_Contents.InvokeRequired)
+                txtBox_Contents.Invoke(new Action(() => { txtBox_Contents.Focus(); }));
+            else
+                txtBox_Contents.Focus();
         }
 
 
