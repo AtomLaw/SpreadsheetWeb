@@ -19,7 +19,7 @@ void spreadsheet::save()
   
   if(!file) return;
 
-  file << this->password << " " << this->version << std::endl;
+  file << this->password <<  std::endl;
   std::map<std::string, std::string>::iterator i;
   for(i = this->cell_map.begin(); i != this->cell_map.end(); ++i)
   {
@@ -37,12 +37,10 @@ bool spreadsheet::load()
   if(!file) return false;
 
   std::string file_password;
-  int file_version;
 
-  file >> file_password >> file_version;
+  file >> file_password;
 
   this->password = file_password;
-   this->version = file_version;
 
   while(!file.eof())
     {
@@ -51,7 +49,8 @@ bool spreadsheet::load()
 
       file >> cell;
       std::getline(file, contents);
-      this->update_cell(cell, contents);
+      if(contents.length() > 0)
+	this->update_cell(cell, contents.substr(1));
     }
   
   file.close();
