@@ -306,8 +306,8 @@ namespace SS
                 {
                     return (double)c.Value;
                 }
-                else
-                    return (double)GetCellValue(name);
+                //else
+                    //return (double)GetCellValue(name);
             }
 
             throw new ArgumentException();

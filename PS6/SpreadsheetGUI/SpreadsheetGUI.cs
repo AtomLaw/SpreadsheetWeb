@@ -132,12 +132,25 @@ namespace SpreadsheetClient
                     txtBox_Value.Text = ss.GetCellValue(txtBox_Cell.Text).ToString();
             }
 
-            //if the contents type is a formula, display it with an '=' appended
-            if(ss.GetCellContents(txtBox_Cell.Text).GetType() == typeof(SpreadsheetUtilities.Formula))
-                txtBox_Contents.Text = "=" + ss.GetCellContents(txtBox_Cell.Text).ToString();
-            //otherwise display the contents of the cell
+            if(txtBox_Contents.Disposing || txtBox_Contents.IsDisposed)
+                return;
+            else if (txtBox_Contents.InvokeRequired)
+            {
+                //if the contents type is a formula, display it with an '=' appended
+                if (ss.GetCellContents(txtBox_Cell.Text).GetType() == typeof(SpreadsheetUtilities.Formula))
+                    txtBox_Contents.Invoke(new Action(() => { txtBox_Contents.Text = "=" + ss.GetCellContents(txtBox_Cell.Text).ToString(); }));
+                //otherwise display the contents of the cell
+                else
+                    txtBox_Contents.Invoke(new Action(() => { txtBox_Contents.Text = ss.GetCellContents(txtBox_Cell.Text).ToString(); }));
+            }
             else
-                txtBox_Contents.Text = ss.GetCellContents(txtBox_Cell.Text).ToString();
+            {
+                if (ss.GetCellContents(txtBox_Cell.Text).GetType() == typeof(SpreadsheetUtilities.Formula))
+                    txtBox_Contents.Text = "=" + ss.GetCellContents(txtBox_Cell.Text).ToString();
+                //otherwise display the contents of the cell
+                else
+                    txtBox_Contents.Text = ss.GetCellContents(txtBox_Cell.Text).ToString();
+            }
 
             //place the focus back on the contents text field
             if (txtBox_Contents.Disposing || txtBox_Contents.IsDisposed)
