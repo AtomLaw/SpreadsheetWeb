@@ -118,7 +118,7 @@ namespace SpreadsheetClient
         /// <param name="e"></param>
         private void SpreadsheetEntry_FormClosing(object sender, FormClosingEventArgs e)
         {
-            model.CloseConnection();
+            //model.CloseConnection();
         }
 
         private void SpreadsheetEntry_Load(object sender, EventArgs e)
